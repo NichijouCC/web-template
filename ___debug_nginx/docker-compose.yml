@@ -1,0 +1,13 @@
+version: '3.0'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: debug_nginx
+    restart: always
+    volumes:
+     - ./nginx.conf:/etc/nginx/nginx.conf
+     - ./cert:/cert
+     - ./nginxlogs:/var/log/nginx
+    command: /bin/bash -c "nginx"
+    network_mode: "host"
