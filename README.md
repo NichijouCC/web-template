@@ -8,7 +8,7 @@
 
 ### 指令：
 1. ``yarn start``启动项目
-2. ``yarn dev [xx]`` 启动以【xx】开头且位于src文件夹下文件，作为入口文件启动项目
+2. ``yarn choose [xx]`` 启动以【xx】开头且位于src文件夹下文件，作为入口文件启动项目
 3. ``yarn build``项目打包
 4. ``build:analyze`` 项目打包分析
 
@@ -19,4 +19,4 @@
 4. eslint 检查代码
 
 ## 注意：
-1. 本地调试优先使用``SwitchHosts``,nginx次之
+1. 本地调试优先使用[SwitchHosts](https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&tn=02003390_hao_pg&wd=SwitchHosts&oq=SwitchHosts), nginx次之

@@ -61,6 +61,8 @@
     "traceResolution": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "typeRoots": [
       "./node_modules/@types",
     ],
@@ -68,9 +70,6 @@
     "paths": {
       "@/*": [
         "src/*"
-      ],
-      "@public/*": [
-        "public/*"
       ]
     }
   }

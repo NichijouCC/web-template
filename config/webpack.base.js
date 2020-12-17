@@ -90,7 +90,8 @@ module.exports = {
         new CleanWebpackPlugin(),
         new DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-            VERSION: JSON.stringify(`Version_${new Date().toUTCString()}`),
+            'process.env.APP_ENV': JSON.stringify(process.env.APP_ENV),
+            APP_VERSION: JSON.stringify(`Version_${new Date().toUTCString()}`),
         })
     ]
 }
