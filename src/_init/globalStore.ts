@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { EnvEnum, IappConfig } from './app_config';
 
 const storeKey = "store";
 function seralize<T>(target: T, name: string) {
@@ -22,9 +23,25 @@ export class StoreCenter {
     authInfo: IauthInfo;
 
     /**
+     * 当前的开发环境
+     */
+    APP_ENV: EnvEnum;
+    /**
+     * 当前版本时间
+     */
+    APP_VERSION: string;
+    /**
+     * 当前使用的配置
+     */
+    APP_CONFIG: IappConfig
+
+    /**
      * 全局数据中心初始化
      */
     init() {
+        this.APP_ENV = process.env.APP_ENV as any;//from env+webapck
+        this.APP_VERSION = APP_VERSION;//from env+webapck
+
         window.addEventListener('beforeunload', () => {
             this.saveDataToLocalStorge();
         }, false);
@@ -38,7 +55,10 @@ export class StoreCenter {
     private saveDataToLocalStorge() {
         let store: string[] = Reflect.getMetadata(storeKey, StoreCenter);
         store?.forEach(key => {
-            localStorage.setItem(key, JSON.stringify(Reflect.get(this, key)))
+            let value = Reflect.get(this, key);
+            if (value != null) {
+                localStorage.setItem(key, JSON.stringify(value))
+            }
         })
     }
 
@@ -52,6 +72,12 @@ export class StoreCenter {
             if (storedInfo) {
                 Reflect.set(this, key, JSON.parse(storedInfo));
             }
+        })
+    }
+
+    clear() {
+        Object.keys(this).forEach(key => {
+            Reflect.set(this, key, null);
         })
     }
 }

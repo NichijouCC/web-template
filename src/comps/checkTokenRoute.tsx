@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
-import { GlobalStore } from '../init/globalStore';
+import { GlobalStore } from '../_init/globalStore';
 
 /**
  * 路由验证token，跳转登录页面
- * @param param0 
+ * @param props.component 目标组件，即route.component 参数
+ * @param props.rest route需要各种参数&目标组件需要各种参数
  */
-export function CheckTokenRoute<T extends RouteProps = RouteProps, P = {}>({ component, ...rest }: T & { component: React.ElementType<P> }) {
+export function CheckTokenRoute<T extends RouteProps = RouteProps, P = {}>({ component, ...rest }: P & T & { component: React.ElementType<P> }) {
     let [beValide, setValide] = useState(true);
     let Comp = component as any;
     return <Route {...rest} render={props => {
