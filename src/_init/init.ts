@@ -1,3 +1,4 @@
+import { initAxiosConfig } from "../services/axiosclient";
 import { EnvEnum, IappConfig, web_config_dev } from "./app_config";
 import { GlobalStore } from "./globalStore";
 
@@ -31,4 +32,7 @@ export function initBeforeAppStart() {
         default:
             GlobalStore.APP_CONFIG = web_config.prod;
     }
+
+    //-----------初始化axios
+    initAxiosConfig();
 }
