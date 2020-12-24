@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { EnvEnum, IappConfig } from './app_config';
+import { EnvTypes, IappConfig } from './app_config';
 
 const storeKey = "store";
 function seralize<T>(target: T, name: string) {
@@ -25,7 +25,7 @@ export class StoreCenter {
     /**
      * 当前的开发环境
      */
-    APP_ENV: EnvEnum;
+    APP_ENV: EnvTypes;
     /**
      * 当前版本时间
      */

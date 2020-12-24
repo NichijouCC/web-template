@@ -1,4 +1,4 @@
-window.web_config = {
+window.url_config = {
     test: {
         api: "https://test_server_address"
     },

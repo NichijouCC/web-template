@@ -1,15 +1,15 @@
 import { initAxiosConfig } from "../services/axiosclient";
-import { EnvEnum, IappConfig, web_config_dev } from "./app_config";
+import { EnvType, IurlConfig, app_config } from "./app_config";
 import { GlobalStore } from "./globalStore";
 
 declare global {
     var APP_VERSION: string
     /**
-     * 配置文件（public/web_config.js）
+     * 配置文件（public/url_config.js）
      */
-    var web_config: {
-        test: IappConfig,
-        prod: IappConfig,
+    var url_config: {
+        test: IurlConfig,
+        prod: IurlConfig,
     }
 };
 
@@ -21,18 +21,37 @@ export function initBeforeAppStart() {
     //-----------初始化数据中心
     GlobalStore.init();
     //-----------初始化app_config
-    switch (process.env.APP_ENV) {
-        case EnvEnum.DEV:
-            GlobalStore.APP_CONFIG = web_config_dev;
-            break;
-        case EnvEnum.TEST:
-            GlobalStore.APP_CONFIG = web_config.test;
-            break;
-        case EnvEnum.PROD:
-        default:
-            GlobalStore.APP_CONFIG = web_config.prod;
-    }
+    initAppConfig();
 
     //-----------初始化axios
     initAxiosConfig();
+
+    //-----------修改domain
+    initAppDomain();
+}
+
+function initAppConfig() {
+    Object.defineProperty(app_config, "urls", {
+        get(): IurlConfig {
+            switch (process.env.APP_ENV as EnvType) {
+                case 'dev':
+                    return app_config.dev_url_config;
+                case "test":
+                    return url_config.test;
+                case "prod":
+                default:
+                    return url_config.prod;
+            }
+        }
+    })
+    GlobalStore.APP_CONFIG = app_config;
+}
+
+function initAppDomain() {
+    if (GlobalStore.APP_CONFIG.domain != null) {
+        let targetDomain = GlobalStore.APP_CONFIG.domain;
+        if (document.domain.indexOf(targetDomain) >= 0) {
+            document.domain = targetDomain;
+        }
+    }
 }
