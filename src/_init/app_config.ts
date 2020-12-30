@@ -4,18 +4,14 @@ export interface IurlConfig {
 export interface IappConfig {
     readonly current_url_config?: IurlConfig;
     domain?: string;
-    dev_url_config: IurlConfig;
 }
-
+export type EnvType = "prod" | "test" | "dev";
 /**
- * 开发环境下的配置
+ * APP的配置
  */
 export const app_config: IappConfig = {
-    domain: "target_domain",
-    dev_url_config: {
-        api: "http://test_server_address"
-    },
+    domain: "target_domain"
 }
 
-export type EnvType = "prod" | "test" | "dev";
+
 

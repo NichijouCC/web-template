@@ -4,13 +4,6 @@ import { GlobalStore } from "./globalStore";
 
 declare global {
     var APP_VERSION: string
-    /**
-     * 配置文件（public/url_config.js）
-     */
-    var url_config: {
-        test: IurlConfig,
-        prod: IurlConfig,
-    }
 };
 
 /**
@@ -35,7 +28,7 @@ function initAppConfig() {
         get(): IurlConfig {
             switch (process.env.APP_ENV as EnvType) {
                 case 'dev':
-                    return app_config.dev_url_config;
+                    return url_config.dev;
                 case "test":
                     return url_config.test;
                 case "prod":

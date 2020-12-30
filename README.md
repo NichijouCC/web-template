@@ -9,7 +9,7 @@
 ### 指令：
 1. ``yarn start``启动项目
 2. ``yarn choose [xx]`` 启动以【xx】开头且位于src文件夹下文件，作为入口文件启动项目
-3. ``yarn build``项目打包
+3. ``yarn build``项目打包(生产环境)，``yarn build:test``项目打包(测试环境)
 4. ``build:analyze`` 项目打包分析
 
 ## 工程特性：

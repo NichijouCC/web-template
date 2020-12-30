@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { EnvTypes, IappConfig } from './app_config';
+import { EnvType, IappConfig } from './app_config';
 
 const storeKey = "store";
 function seralize<T>(target: T, name: string) {
@@ -15,7 +15,7 @@ function seralize<T>(target: T, name: string) {
  * 全局数据中心
  * 
  * @description
- * 需要被持久化的数据使用 seralize 进行标记
+ * 需要被持久化的数据(存储到localstorage)使用 seralize 进行标记
  * 
  */
 export class StoreCenter {
@@ -25,7 +25,7 @@ export class StoreCenter {
     /**
      * 当前的开发环境
      */
-    APP_ENV: EnvTypes;
+    APP_ENV: EnvType;
     /**
      * 当前版本时间
      */

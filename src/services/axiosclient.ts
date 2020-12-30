@@ -2,7 +2,7 @@ import axios from 'axios';
 import { GlobalStore } from '../_init/globalStore';
 
 export function initAxiosConfig() {
-    axios.defaults.baseURL = GlobalStore.APP_CONFIG?.url_config.api;
+    axios.defaults.baseURL = GlobalStore.APP_CONFIG?.current_url_config.api;
     // axiosClient.defaults.withCredentials = true;
     axios.defaults.timeout = 30000; //响应时间
     axios.interceptors.request.use((config) => {
