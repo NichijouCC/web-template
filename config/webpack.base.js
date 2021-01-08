@@ -32,8 +32,16 @@ module.exports = {
                         loader: 'html-loader'
                     },
                     {
-                        test: /\.(scss|css)$/,
-                        use: ["style-loader", "css-loader", "sass-loader"]
+                        test: /\.(less|css)$/,
+                        use: ["style-loader", "css-loader",
+                            {
+                                loader: "less-loader",
+                                options: {
+                                    lessOptions: {
+                                        javascriptEnabled: true,
+                                    }
+                                }
+                            }]
                     },
                     {
                         test: /\.(svg|jpg|jpeg|bmp|png|webp|gif|ico|ttf)$/,
