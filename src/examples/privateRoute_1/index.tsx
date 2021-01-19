@@ -1,12 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { initBeforeAppStart } from "@/_init/init";
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom'
 import Page1 from "./page1";
 import Page2 from "./page2";
 import { CheckTokenRoute } from "../../comps/checkTokenRoute";
-
-initBeforeAppStart();
+import { MyApp } from "../../__internal";
 
 export function AllRoutes() {
     return <Router>
@@ -16,4 +14,7 @@ export function AllRoutes() {
     </Router>
 }
 
-ReactDOM.render(< AllRoutes />, document.getElementById("root"));
+
+MyApp.start(() => {
+    ReactDOM.render(< AllRoutes />, document.getElementById("root"));
+})

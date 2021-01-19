@@ -2,6 +2,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
 const config = require('./config');
+const path = require("path");
 /**
  * 给webpack配置增加cesium配置
  * @param {webpack.Configuration } webpackConfig 
@@ -21,7 +22,7 @@ function formate_webpack_config_with_cesium(webpackConfig, beProduction) {
         },
         module: {
             ...webpackConfig.module,
-            unknownContextCritical: true
+            unknownContextCritical: false
         },
         resolve: {
             ...webpackConfig.resolve,

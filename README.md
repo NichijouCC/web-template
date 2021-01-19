@@ -18,5 +18,39 @@
 3. .vscode->launch.json 配置浏览器以关闭安全策略启动
 4. eslint 检查代码
 
+
+### 项目 - 配置设置
+项目的配置由两部分组成，一个公有配置(public->public_app_config.js),一个私有配置(src->private_app_config.json)，两者组合为最终的APP_CONFIG。
+
+1. app_config文件结构说明:
+> common: 公有的项目配置  
+dev:开发下的项目配置  
+test:测试下的项目配置  
+prod:生产下的项目配置  
+
+2. 配置优先级说明:
+> 公有配置优先级 > 私有配置优先级;  
+具体环境配置优先级 > 公有配置优先级;
+
+3. 配置设置方式：
+> a. 在两个（公有/私有）配置文件中进行配置设置  
+b. 在 src->config->init.ts 中项目配置 的类型信息. (方便在使用APP_CONFIG的时候获取类型提示)
+
+
+3. 代码中使用配置举例
+```
+let api=APP_CONFIG.api;
+```
+
+### 项目 - 数据中心
+数据中心是用于存放项目共享的数据（即修改了不会触发界面修改的数据,如果需要请使用redux、mobx等）。
+
+1. 数据中心设置方式：
+在 src-> config->mystore.ts 中设置 项目数据中心需要的数据，需要刷新依旧存在的数据需要通过@att标注
+
+
+### 项目 - API请求配置
+1. 在src->services->axiosclient 配置了axios的全局配置
+
 ## 注意：
 1. 本地调试优先使用[SwitchHosts](https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&tn=02003390_hao_pg&wd=SwitchHosts&oq=SwitchHosts), nginx次之

@@ -7,7 +7,7 @@ const config = require("./config");
 module.exports = {
     ...baseConfig,
     mode: 'development',
-    devtool: "source-map",
+    devtool: "eval-source-map",
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         ...baseConfig.plugins,
@@ -29,6 +29,7 @@ module.exports = {
         watchOptions: {
             ignored: /node_modules/
         },
-        proxy: {}
+        proxy: {},
+        disableHostCheck: true,
     }
 }
