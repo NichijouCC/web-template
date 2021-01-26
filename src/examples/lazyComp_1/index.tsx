@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { LazyComp } from "../../comps/lazyComp";
 import { MyApp } from "../../__internal";
 
@@ -8,6 +7,4 @@ function PlayWithLazyComp() {
 }
 
 
-MyApp.start(() => {
-    ReactDOM.render(<PlayWithLazyComp />, document.getElementById("root"));
-})
+MyApp.start(<PlayWithLazyComp />)

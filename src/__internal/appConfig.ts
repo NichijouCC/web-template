@@ -1,11 +1,11 @@
 import private_app_config from '../private_app_config.json';
 
-export type EnvType = "prod" | "test" | "dev";
+type EnvType = "prod" | "test" | "dev";
 
 /**
  * 初始化APP_CONFIG、APP_ENV、APP_VERSION
  */
-export function initAppConfig() {
+function initAppConfig() {
     global.APP_VERSION = APP_VERSION; //from env+webapck
     (global as any).APP_ENV = process.env.APP_ENV as EnvType;//from env+webapck
     switch (process.env.APP_ENV as EnvType) {
@@ -20,3 +20,5 @@ export function initAppConfig() {
             (global as any).APP_CONFIG = { ...private_app_config.common, ...public_app_config.common, ...private_app_config.prod, ...public_app_config.prod };
     }
 }
+
+export { EnvType, initAppConfig }

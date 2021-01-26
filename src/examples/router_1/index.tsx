@@ -16,6 +16,4 @@ export function AllRoutes() {
     </Router>
 }
 
-MyApp.start(() => {
-    ReactDOM.render(< AllRoutes />, document.getElementById("root"));
-})
+MyApp.start(< AllRoutes />)

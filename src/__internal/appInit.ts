@@ -1,5 +1,6 @@
-import { EnvType, initAppConfig } from "./appConfig";
+import { initAppConfig } from "./appConfig";
 import { APPSTORE } from "./appStore";
+import { MyApp } from "./myApp";
 
 declare global {
     var APP_VERSION: string;
@@ -32,7 +33,6 @@ function initAppDomain() {
     }
 }
 
-
 /**
  * 创建一个数据中心
  * @param storeName 
@@ -42,8 +42,9 @@ export function MyStore(target: Function) {
         throw new Error("can only create one store")
     } else {
         let ctr = target.constructor as any;
-        (global as any).INTERNAL_STORE = new ctr();
-        (global as any).APP_STORE = new ctr();
+        let _store = new APPSTORE(new ctr(), MyApp.storeOption);
+        (global as any).INTERNAL_STORE = _store;
+        (global as any).APP_STORE = _store.storeIns;
     }
 }
 
