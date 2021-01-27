@@ -90,15 +90,16 @@ MyApp.start(<APP />, {
 4. TODO: echarts样例
 
 ## 项目-webapck特性
-1. ts/js支持
-2. 自动判断是否添加cesium的webpack配置
-3. 根据指令从不同入口文件启动项目
+1. 泛含义上的特性（less支持、压缩、分块等）
+2. ts/js支持
+3. 自动判断是否添加cesium的webpack配置
+4. 根据指令从不同入口文件启动项目
 
 ## 项目-指令：
 1. ``yarn start``启动项目（开发环境）
-2. ``yarn choose [xx]`` 启动以【xx】开头且位于src文件夹下文件，作为入口文件启动项目
-3. ``yarn build``项目打包(生产环境)，``yarn build:test``项目打包(测试环境)
-4. ``build:analyze`` 项目打包分析
+2. ``yarn build``项目打包(生产环境)，``yarn build:test``项目打包(测试环境)
+3. ``build:analyze`` 项目打包分析
+4. ``yarn choose [xx]`` 启动以【xx】开头且位于src文件夹下文件，作为入口文件启动项目
 
 ## 项目工程特性：
 1. web项目的docker部署配置文件

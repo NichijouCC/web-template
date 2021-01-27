@@ -6,18 +6,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
-const pathsMap = require("./config");
+const config = require("./config");
 const { DefinePlugin } = require('webpack');
 
 module.exports = {
     entry: {
-        app: path.resolve(pathsMap.appPath, "index.tsx"),
+        app: path.resolve(config.appPath, "index.tsx"),
         vendor: ['react', 'react-dom']
     },
     output: {
         filename: 'js/[name].bundle.js',
-        path: pathsMap.buildPath,
-        publicPath: pathsMap.assetBasePath,
+        path: config.buildPath,
+        publicPath: config.assetBasePath,
     },
     module: {
         rules: [
@@ -25,8 +25,8 @@ module.exports = {
                 oneOf: [
                     {
                         test: /\.(j|t)sx?$/,
-                        include: pathsMap.appPath,
-                        exclude: pathsMap.node_modules_path,
+                        include: config.appPath,
+                        exclude: config.node_modules_path,
                         use: "babel-loader",
                     },
                     {
@@ -50,7 +50,7 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             name: 'img/[name].[hash:8].[ext]',
-                            outputPath: pathsMap.buildPath,
+                            outputPath: config.buildPath,
                         }
                     },
                     {
@@ -78,7 +78,7 @@ module.exports = {
             { from: 'public', ignore: ['index.html'] },
         ]),
         new HtmlWebpackPlugin({
-            template: pathsMap.indexHtmlPath,
+            template: config.indexHtmlPath,
             minify: {
                 removeComments: true,
                 collapseWhitespace: true,
