@@ -45,7 +45,7 @@ let api=APP_CONFIG.api;
 
 ### 3.数据中心（APP_STORE）管理
 数据中心是用于存放项目共享的数据。  
-如果需要配置数据修改事件,需要自行定义（参见ctool--EventTarget）,如果需要重量组件通信,请使用redux、mobx等
+如果需要配置数据修改事件,需要自行定义（参见ctool--EventTarget）,如果需要重量组件通信,请配合使用redux、mobx等
 
 - 数据中心在业务中使用：
 1. 在 src-> config->mystore.ts 中设置 项目数据中心需要的数据，需要关闭再打开或刷新依旧存在的数据需要通过@att标注
