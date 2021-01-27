@@ -3,11 +3,20 @@ web项目基础模板 , 方便简单快速的开发web项目。
 
 ## 项目模板
 启动项目
+对应``ReactDOM.render(root, document.getElementById("root"));``
 ```
-MyApp.start(<APP />);
+MyApp.start(<APP />,{
+    //（可选） 设置当前项目环境,覆盖掉默认环境配置 
+    app_env:"prod";
+    //（可选） 配置数据中心，详情见下面 3.数据中心（APP_STORE）管理
+    storeOpt:{}
+    //（可选） 启动的时候干些事情
+    onInit: () => {};
+});
 ```
+
 ### 1. 项目属性获取
-- APP_VERSION：项目打包时间
+- APP_VERSION：项目版本信息
 - APP_ENV：项目环境（"prod" | "test" | "dev"）
 - APP_CONFIG：项目配置
 - APP_STORE: 项目数据中心
@@ -16,33 +25,22 @@ MyApp.start(<APP />);
 项目的配置由两部分组成，一个公有配置(public->public_app_config.js),一个私有配置(src->private_app_config.json)，两者组合为最终的APP_CONFIG。
 
 - app_config文件结构说明:
-> common: 公有的项目配置  
+> common: 各环境common配置  
 dev:开发下的项目配置  
 test:测试下的项目配置  
 prod:生产下的项目配置  
 
 - 配置优先级说明:
-> 公有配置优先级 > 私有配置优先级;  
-具体环境配置优先级 > 公有配置优先级;
+> 公有配置优先级 > 私有配置优先级;
+具体环境配置优先级 > 各环境common配置优先级;
 
 - 配置设置方式：
 > a. 在两个（公有/私有）配置文件中进行配置设置  
 b. 在 src->config->init.ts 中项目配置 的类型信息. (方便在使用APP_CONFIG的时候获取类型提示)
 
-- 内置可选规范
-> a. 后端url配置  
-b. 项目的目标domain
-
 - 代码中使用配置举例
 ```
-//1. 项目中使用配置好的配置
 let api=APP_CONFIG.api;
-
-//2. 项目中配置domain(目的：多个二级域名项目使用一级域名，解除不同域名无法共享数据和页面间跨域的问题)
-//private_app_config.json
-{
-    domain:"xxx.com"
-}
 ```
 
 ### 3.数据中心（APP_STORE）管理
@@ -97,7 +95,7 @@ MyApp.start(<APP />, {
 3. 根据指令从不同入口文件启动项目
 
 ## 项目-指令：
-1. ``yarn start``启动项目
+1. ``yarn start``启动项目（开发环境）
 2. ``yarn choose [xx]`` 启动以【xx】开头且位于src文件夹下文件，作为入口文件启动项目
 3. ``yarn build``项目打包(生产环境)，``yarn build:test``项目打包(测试环境)
 4. ``build:analyze`` 项目打包分析

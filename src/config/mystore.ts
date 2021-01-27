@@ -1,7 +1,7 @@
 import { Att, MyStore } from '../__internal';
 
 /**
- * 项目共享的数据中心
+ * 项目自定义的数据中心
  */
 @MyStore
 export class Mystore {

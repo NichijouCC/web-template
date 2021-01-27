@@ -1,4 +1,6 @@
 const path = require('path');
+const pkg = require("../package.json");
+
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -99,7 +101,7 @@ module.exports = {
         new DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
             'process.env.APP_ENV': JSON.stringify(process.env.APP_ENV),
-            APP_VERSION: JSON.stringify(`Version_${new Date().toUTCString()}`),
+            APP_VERSION: JSON.stringify(`Version:${pkg.version}  time:${new Date().toUTCString()}`),
         })
     ]
 }

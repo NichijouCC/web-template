@@ -1,5 +1,8 @@
 import "reflect-metadata";
 
+/**
+ * app_store 配置项
+ */
 export interface IstoreOption {
     /**
      * 是否将数据存入Storage，默认：“none”
@@ -15,7 +18,6 @@ export interface IstoreOption {
  * 
  * @description
  * 需要被持久化的数据(存储到localstorage)使用 seralize 进行标记
- * 
  */
 export class APPSTORE<T extends object = {}> {
     private _store: T;
@@ -85,7 +87,7 @@ export class APPSTORE<T extends object = {}> {
 }
 
 /**
- * store 
+ * 标记需要持久化的数据 
  */
 export function Att<K>(target: K, name: string) {
     let store: string[] = Reflect.getMetadata(storeKey, target);
@@ -93,6 +95,31 @@ export function Att<K>(target: K, name: string) {
         Reflect.defineMetadata(storeKey, [name], target);
     } else {
         store.push(name);
+    }
+}
+
+var _store_target: Function;
+/**
+ * 标记数据中心目标
+ * @param storeName 
+ */
+export function MyStore(target: Function) {
+    if (_store_target != null) {
+        throw new Error("can only create one store")
+    } else {
+        _store_target = target;
+    }
+}
+
+/**
+ * 初始化数据中心
+ */
+export function initAppStore(opt?: IstoreOption) {
+    if (_store_target) {
+        let ctr = _store_target.constructor as any;
+        let _store = new APPSTORE(new ctr(), opt);
+        (global as any).INTERNAL_STORE = _store;
+        (global as any).APP_STORE = _store.storeIns;
     }
 }
 

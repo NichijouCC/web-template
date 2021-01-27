@@ -1,6 +1,6 @@
-import { EnvType } from './appConfig';
-import { MyStore } from './appInit';
-import { Att } from './appStore';
+import { AppEnvType } from './appConfig';
+import { Att, MyStore } from './appStore';
 import { MyApp } from './myApp';
 
-export { MyApp, Att, EnvType, MyStore }
+export { MyApp, Att, MyStore };
+export type { AppEnvType };

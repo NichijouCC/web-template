@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+/**
+ * 配置axios的基本配置
+ */
 export function initAxiosConfig() {
     axios.defaults.baseURL = APP_CONFIG?.api;
     axios.defaults.timeout = 10000; //响应时间
@@ -19,16 +22,23 @@ export function initAxiosConfig() {
                 if (response.data.code == 200 || 2000) {
                     return response.data;
                 } else {
-                    if (data.code == 401) {//认证失败
-                        INTERNAL_STORE?.clear();
-                        window.location.reload();
+                    //-----------------------------------------------------------
+                    //              处理公共异常code状态（可选）
+                    //-----------------------------------------------------------
+                    {//异常code举例：处理401
+                        if (data.code == 401) {//认证失败
+                            INTERNAL_STORE?.clear();
+                            window.location.reload();
+                        }
                     }
                     return Promise.reject(response.data);
                 }
             }
         });
 }
-
+/**
+ * 规范化的数据返回格式
+ */
 interface IcustomResponse<T = any> {
     /**
      * 状态码
