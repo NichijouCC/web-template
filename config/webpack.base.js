@@ -101,7 +101,7 @@ module.exports = {
         new DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
             'process.env.APP_ENV': JSON.stringify(process.env.APP_ENV),
-            APP_VERSION: JSON.stringify(`Version:${pkg.version}  time:${new Date().toUTCString()}`),
+            APP_VERSION: JSON.stringify(`Version${pkg.version} - ${new Date().toUTCString()}`),
         })
     ]
 }

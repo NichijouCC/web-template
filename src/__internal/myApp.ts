@@ -43,7 +43,7 @@ export class MyApp {
      */
     static start = (root: ReactElement, opt?: IappOption) => {
         MyApp._opt = opt;
-        console.info(`LASTEST APP_VERSION:${APP_VERSION}`);
+        console.info(`版本信息：${APP_VERSION}`);
         //-----------初始化APP_CONFIG
         initAppConfig(opt?.app_env);
         //-----------初始化APP_STORE
