@@ -24,7 +24,7 @@ export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
             let storage = opt.saveItemToStorage == "localStorage" ? localStorage : sessionStorage;
             this._clearStore = () => storage.clear();
 
-            this.on(store_event as any, (ev: any) => {
+            this.on("attChange" as any, (ev: any) => {
                 let { att, newValue } = ev;
                 storage.setItem(att, JSON.stringify(newValue));
             })
@@ -49,7 +49,8 @@ export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
         let storedData = new Proxy(store, {
             set: function (obj, prop, value) {
                 obj[prop] = value;
-                store.emit(store_event as any, { att: prop.toString(), newValue: value, oldValue: this[prop] } as any)
+                store.emit("attChange", { att: prop.toString(), newValue: value, oldValue: this[prop] });
+                store.emit(prop.toString(), { newValue: value, oldValue: this[prop] })
                 return true;
             }
         });
@@ -112,4 +113,3 @@ export function Att<K>(target: K, name: string) {
 
 
 const storeKey = "__private__store";
-const store_event = "__private__store_data_change";
