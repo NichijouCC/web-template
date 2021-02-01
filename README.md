@@ -3,19 +3,19 @@ web项目基础模板 , 方便简单快速的开发web项目。
 
 项目文件目录介绍：
 ```
-- config                                                   # webapck配置管理目录                   (必选，固定目录，可按需增加webpack配置)
-- public                                                   # 项目公共资源目录                       (必选，固定目录,按需添加额外资源)
--- index.html                                              # 项目html文件                          (必选，固定文件)
--- public_app_config.js                                    # 项目公共配置文件                       (必选，固定文件)
-- src                                                      # 项目源码目录                           (固定目录)
--- __internal                                              # 项目框架源码目录                       (必选，固定目录)
--- comps                                                   # 项目公共组件目录                       (可选，推荐目录)
--- config                                                  # 项目（app_store和app_config）自定义配置目录    (必选，固定目录)
--- examples                                                # 公共组件演示和功能演示样例目录          (不需要)
--- pages                                                   # 项目分页管理目录                       (可选，推荐目录)
--- services                                                # 和后端通信配置管理目录                  (可选，推荐目录)
--- index.tsx                                               # 项目启动文件                           (必选，固定文件)
--- private_app_config.json                                 # 项目私有配置文件                       (必选，固定文件)
+- config                        # webapck配置管理目录                   (必选，固定目录，可按需增加webpack配置)
+- public                        # 项目公共资源目录                       (必选，固定目录,按需添加额外资源)
+-- index.html                   # 项目html文件                          (必选，固定文件)
+-- public_app_config.js         # 项目公共配置文件                       (必选，固定文件)
+- src                           # 项目源码目录                           (固定目录)
+-- __internal                   # 项目框架源码目录                       (必选，固定目录)
+-- comps                        # 项目公共组件目录                       (可选，推荐目录)
+-- config                       # 项目（app_store和app_config）自定义配置目录    (必选，固定目录)
+-- examples                     # 公共组件演示和功能演示样例目录          (不需要)
+-- pages                        # 项目分页管理目录                       (可选，推荐目录)
+-- services                     # 和后端通信配置管理目录                  (可选，推荐目录)
+-- index.tsx                    # 项目启动文件                           (必选，固定文件)
+-- private_app_config.json      # 项目私有配置文件                       (必选，固定文件)
 ```
 
 项目依赖:👩‍💻👩‍💻👩‍💻
