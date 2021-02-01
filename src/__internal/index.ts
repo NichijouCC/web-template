@@ -1,6 +1,3 @@
-import { AppEnvType } from './appConfig';
-import { Att, MyStore } from './appStore';
-import { MyApp } from './myApp';
-
-export { MyApp, Att, MyStore };
-export type { AppEnvType };
+export * from './myApp';
+export * from './dataCenter';
+export * from './iapp';

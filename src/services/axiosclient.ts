@@ -27,7 +27,7 @@ export function initAxiosConfig() {
                     //-----------------------------------------------------------
                     {//异常code举例：处理401
                         if (data.code == 401) {//认证失败
-                            INTERNAL_STORE?.clear();
+                            APP_STORE?.clear();
                             window.location.reload();
                         }
                     }
