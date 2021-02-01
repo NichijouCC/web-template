@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import ReactDOM from "react-dom";
-import { AppStore } from "./dataCenter";
+import { AppStore } from "./appStore";
 import { AppEnvType, IappStartOption, IstoreOption } from "./iapp";
 import private_config from '@/private_app_config.json'
 import { EventEmitter } from "@mtgoo/ctool";
@@ -48,7 +48,7 @@ export class MyApp<K extends object = {}, T extends object = {}> {
         //--------------------APP_CONFIG
         this.initConfig(app_configs);
         //-----------初始化APP_STORE
-        let datacenter = datacenter_data ?? (_datacenter_target ? new (_datacenter_target as any).constructor() : {})
+        let datacenter = datacenter_data ?? (_datacenter_target ? new (_datacenter_target as any)() : {})
         this.initAppStore(datacenter as any, datacenter_opt);
         //-----------初始化APP_EVENTCENTER
         this.appEventCenter = new EventEmitter<IdataEvents>();
@@ -102,7 +102,7 @@ export class MyApp<K extends object = {}, T extends object = {}> {
     }
 }
 
-var _datacenter_target: Function;
+var _datacenter_target: new () => any;
 export function MyStore(target: Function) {
-    _datacenter_target = target;
+    _datacenter_target = target as any;
 }

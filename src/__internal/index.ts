@@ -1,3 +1,3 @@
 export * from './myApp';
-export * from './dataCenter';
+export * from './appStore';
 export * from './iapp';

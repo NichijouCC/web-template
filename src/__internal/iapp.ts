@@ -1,5 +1,5 @@
 import { EventEmitter } from "@mtgoo/ctool";
-import { AppStore, IstoreEvents } from "./dataCenter";
+import { AppStore, IstoreEvents } from "./appStore";
 
 declare global {
     /**

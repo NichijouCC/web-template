@@ -17,8 +17,10 @@ export type IstoreEvents<T extends object = {}> = IprivateEvents & IattEvents<T>
  * 需要被持久化的数据(存储到localstorage)使用 seralize 进行标记
  */
 export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
-    private constructor(opt: IstoreOption) {
+    private _target: any;
+    private constructor(data: any, opt: IstoreOption) {
         super();
+        this._target = data;
         let { saveItemToStorage = "none" } = opt || {};
         if (saveItemToStorage != "none") {
             let storage = opt.saveItemToStorage == "localStorage" ? localStorage : sessionStorage;
@@ -41,9 +43,11 @@ export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
     }
 
     static create<P extends object = {}>(data: P, opt?: IstoreOption): AppStore<IstoreEvents<P>> & P {
-        let store = new AppStore<IstoreEvents<P>>(opt);
+        let store = new AppStore<IstoreEvents<P>>(data, opt);
         Object.keys(data).forEach(item => {
-            store[item] = data[item];
+            if (data[item] != null) {//如果赋值了初始值，覆盖storage中取到的值
+                store[item] = data[item];
+            }
         });
 
         let storedData = new Proxy(store, {
@@ -57,12 +61,11 @@ export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
         return storedData as any;
     }
 
-
     /**
      * 将需要持久化的数据存储到LocalStorge中
      */
     private saveDataToLocalStorge() {
-        let store: string[] = Reflect.getMetadata(storeKey, this);
+        let store: string[] = Reflect.getMetadata(storeKey, this._target);
 
         let needStoreData = {};
         store?.forEach(key => {
@@ -77,7 +80,7 @@ export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
      * 从localstorge加载被持久化的数据
      */
     private loadDataFromLocalStorage() {
-        let store: string[] = Reflect.getMetadata(storeKey, this);
+        let store: string[] = Reflect.getMetadata(storeKey, this._target);
         let storedInfo = JSON.parse(localStorage.getItem(storeKey));
         if (storedInfo) {
             store?.forEach(key => {
@@ -91,7 +94,7 @@ export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
      * 清空store的数据
      */
     clear(clearStorage: boolean = true) {
-        let store: string[] = Reflect.getMetadata(storeKey, this);
+        let store: string[] = Reflect.getMetadata(storeKey, this._target);
         store?.forEach(key => {
             Reflect.set(this, key, null);
         });
