@@ -15,24 +15,20 @@ export function initAxiosConfig() {
 
     axios.interceptors.response.use(
         response => {
-            let data = response.data as { code?: number, message: string, data: any }
-            if (data.code == null) {
-                return response.data;
+            let data = response.data as IcustomResponse;
+            if ((data.code == 200 || 2000) || data.code == null) {
+                return data as any;
             } else {
-                if (response.data.code == 200 || 2000) {
-                    return response.data;
-                } else {
-                    //-----------------------------------------------------------
-                    //              处理公共异常code状态（可选）
-                    //-----------------------------------------------------------
-                    {//异常code举例：处理401
-                        if (data.code == 401) {//认证失败
-                            APP_STORE?.clear();
-                            window.location.reload();
-                        }
+                //-----------------------------------------------------------
+                //              处理公共异常code状态（可选）
+                //-----------------------------------------------------------
+                {//异常code举例：处理401
+                    if (data.code == 401) {//认证失败
+                        APP_STORE?.clear();
+                        window.location.reload();
                     }
-                    return Promise.reject(response.data);
                 }
+                return Promise.reject(data) as any;
             }
         });
 }
