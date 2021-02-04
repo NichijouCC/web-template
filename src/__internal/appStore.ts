@@ -14,7 +14,7 @@ export type IstoreEvents<T extends object = {}> = IprivateEvents & IattEvents<T>
  * 全局数据中心
  * 
  * @description
- * 需要被持久化的数据(存储到localstorage)使用 seralize 进行标记
+ * 需要被持久化的数据(存储到localStorage)使用 serialize 进行标记
  */
 export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
     private _target: any;
@@ -33,7 +33,7 @@ export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
         }
 
         window.addEventListener('beforeunload', () => {
-            this.saveDataToLocalStorge();
+            this.saveDataToLocalStorage();
         }, false);
 
         if (opt?.loadDataOnOpen != false) {
@@ -62,9 +62,9 @@ export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
     }
 
     /**
-     * 将需要持久化的数据存储到LocalStorge中
+     * 将需要持久化的数据存储到LocalStorage中
      */
-    private saveDataToLocalStorge() {
+    private saveDataToLocalStorage() {
         let store: string[] = Reflect.getMetadata(storeKey, this._target);
 
         let needStoreData = {};
@@ -77,7 +77,7 @@ export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
     }
 
     /**
-     * 从localstorge加载被持久化的数据
+     * 从localStorage加载被持久化的数据
      */
     private loadDataFromLocalStorage() {
         let store: string[] = Reflect.getMetadata(storeKey, this._target);

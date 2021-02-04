@@ -1,17 +1,17 @@
-import { IcustomeConfig } from "./customeConfig";
-import { CustomeStore, IcustomeStoreEvents } from "./customeStore";
+import { IcustomConfig } from "./customConfig";
+import { CustomStore, IcustomStoreEvents } from "./customStore";
 //tip:此文件不需要修改
 declare global {
     /**
      * （项目配置）自定义类型
      */
-    interface IappConfig extends IcustomeConfig { }
+    interface IappConfig extends IcustomConfig { }
     /**
      * (store的数据)自定义类型
      */
-    interface IdataStruct extends CustomeStore { }
+    interface IstoreData extends CustomStore { }
     /**
      * (store的事件) 自定义类型
      */
-    interface IdataEvents extends IcustomeStoreEvents { }
+    interface IdataEvents extends IcustomStoreEvents { }
 };

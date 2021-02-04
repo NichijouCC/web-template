@@ -7,15 +7,15 @@ import { Route, Redirect, RouteProps } from 'react-router-dom';
  * @param props.rest route需要各种参数&目标组件需要各种参数
  */
 export function CheckTokenRoute<T extends RouteProps = RouteProps, P = {}>({ component, ...rest }: P & T & { component: React.ElementType<P> }) {
-    let [beValide, setValide] = useState(true);
+    let [beValid, setValid] = useState(true);
     let Comp = component as any;
     return <Route {...rest} render={props => {
         if (APP_STORE.authInfo?.token == null) {
-            setValide(false);
+            setValid(false);
         } else {
             //在这调用api检查token
         }
-        return beValide ? <Comp {...props} />
+        return beValid ? <Comp {...props} />
             :
             <Redirect to={{
                 pathname: '/login',

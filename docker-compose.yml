@@ -6,8 +6,8 @@ services:
     restart: always
     expose: 
       - 80
-    networks:
-      - production_net
-networks:
-  production_net:
-    external: true
+#     networks:
+#       - production_net
+# networks:
+#   production_net:
+#     external: true

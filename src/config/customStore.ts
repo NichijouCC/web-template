@@ -4,7 +4,7 @@ import { Att, MyStore } from '../__internal';
  * APP_STORE 配置
  */
 @MyStore
-export class CustomeStore {
+export class CustomStore {
     //-----------------------------------------------------
     //                  项目需要的共享数据定义在这里
     //----------------------------------------------------
@@ -15,7 +15,7 @@ export class CustomeStore {
 /**
  * 数据中心的自定义事件
  */
-export interface IcustomeStoreEvents {
+export interface IcustomStoreEvents {
     //-----------------------------------------------------
     //                  项目需要的事件定义在这里
     //-----------------------------------------------------

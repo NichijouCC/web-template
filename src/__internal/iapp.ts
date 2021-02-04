@@ -17,7 +17,7 @@ declare global {
     /**
      * 项目的数据中心
      */
-    var APP_STORE: IdataStruct & AppStore<IstoreEvents<IdataStruct>>;
+    var APP_STORE: IstoreData & AppStore<IstoreEvents<IstoreData>>;
 
     /**
      * 项目配置
@@ -34,7 +34,7 @@ declare global {
     /**
      * 数据中心的类型定义
      */
-    interface IdataStruct { }
+    interface IstoreData { }
 }
 
 export type AppEnvType = "prod" | "test" | "dev";
@@ -53,7 +53,7 @@ export interface IstoreOption {
     /**
      * 是否将数据存入Storage，默认：“none”
      */
-    saveItemToStorage?: "localStorage" | "sessionstorage" | "none";
+    saveItemToStorage?: "localStorage" | "sessionStorage" | "none";
     /**
      * 启动的时候加载上次的数据，默认：true
      */
@@ -67,26 +67,26 @@ export interface IappStartOption<T extends object = {}> {
     /**
      * 覆盖掉默认环境配置
      */
-    app_env?: AppEnvType;
+    appEnv?: AppEnvType;
     /**
-     * merge掉 privateconfig和publicconfig
+     * merge掉 privateConfig和publicConfig
      */
-    app_config?: Partial<IappConfig>;
+    appConfig?: Partial<IappConfig>;
     /**
      * 数据中心 - 存储的数据
      */
-    store_data?: T,
+    storeData?: T,
     /**
      * 数据中心 - 配置项
      */
-    store_opt?: {
-        saveItemToStorage?: "localStorage" | "sessionstorage" | "none";
+    storeOpt?: {
+        saveItemToStorage?: "localStorage" | "sessionStorage" | "none";
         loadDataOnOpen?: boolean;
     },
     /**
      * domain改写
      */
-    app_domain?: string;
+    appDomain?: string;
 
     /**
      * 启动的时候干些事情

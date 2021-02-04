@@ -1,4 +1,4 @@
-const public_app_config = {
+const publicAppConfig = {
     common: {},
     dev: {
         api: "https://dev_server_address"

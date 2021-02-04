@@ -4,7 +4,7 @@ import React, { useEffect, useState, ComponentType } from "react";
  * 懒加载组件,配合import使用
  * @param props.target 目标组件(界面)
  * @param props.targetProps (可选)目标组件需要的props
- * @param props.onloading (可选)加载目标组件过程中需要显示的JSX.Element
+ * @param props.onLoading (可选)加载目标组件过程中需要显示的JSX.Element
  * 
  * @example
  * ```
@@ -18,7 +18,7 @@ export function LazyComp<T = {}>(
     props: {
         target: () => Promise<{ default: ComponentType<T> }>,
         targetProps?: T,
-        onloading?: JSX.Element
+        onLoading?: JSX.Element
     }): JSX.Element {
     let [Comp, setComp] = useState<ComponentType<T>>(null);
 
@@ -33,5 +33,5 @@ export function LazyComp<T = {}>(
         })
     }, []);
 
-    return Comp ? <Comp {...props.targetProps} /> : props.onloading
+    return Comp ? <Comp {...props.targetProps} /> : props.onLoading
 }
