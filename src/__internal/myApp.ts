@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import ReactDOM from "react-dom";
 import { AppStore } from "./appStore";
-import { AppEnvType, IappStartOption, IstoreOption } from "./iapp";
+import { AppEnvType, IappOption, IstoreOption } from "./iapp";
 import privateConfig from '@/private_app_config.json'
 import { EventEmitter } from "@mtgoo/ctool";
 
@@ -36,7 +36,7 @@ export class MyApp<K extends object = {}, T extends object = {}> {
      * @param root 项目组件根节点
      * @param opt 
      */
-    private constructor(opt?: IappStartOption<T>) {
+    private constructor(opt?: IappOption<T>) {
         console.info(`版本信息：${APP_VERSION}`);
         let { appEnv: app_env, appConfig, storeData: store_data, storeOpt, appDomain, onInit } = opt || {};
         //--------------------APP_VERSION
@@ -95,7 +95,7 @@ export class MyApp<K extends object = {}, T extends object = {}> {
         }
     }
 
-    static start<T extends object = {}>(root: ReactElement, opt?: IappStartOption<T>) {
+    static start<T extends object = {}>(root: ReactElement, opt?: IappOption<T>) {
         let app = new MyApp(opt);
         ReactDOM.render(root, document.getElementById("root"));
         return app;

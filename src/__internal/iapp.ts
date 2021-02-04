@@ -63,7 +63,7 @@ export interface IstoreOption {
 /**
  * 项目可选配置
  */
-export interface IappStartOption<T extends object = {}> {
+export interface IappOption<T extends object = {}> {
     /**
      * 覆盖掉默认环境配置
      */
