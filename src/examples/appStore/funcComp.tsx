@@ -14,7 +14,7 @@ export function FuncComp() {
             APP_STORE.off("xxAA", handler)
         }
     });
-    return (<div>{xxAA}</div>)
+    return <div>【FuncComp】xxAA:{xxAA}</div>
 }
 
 
@@ -23,5 +23,5 @@ export function FuncComp() {
  */
 export function FuncComp2() {
     let storeAtt = useAppStore("xxAA");
-    return (<div>{storeAtt}</div>)
+    return <div>【FuncComp2】xxAA:{storeAtt}</div>
 }
