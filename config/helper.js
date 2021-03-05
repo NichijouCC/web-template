@@ -58,14 +58,14 @@ function runExampleFile() {
  * 
  * @returns {Promise<String>}
  */
-function findeExampleFile() {
+function findExampleFile() {
     const file_prefix = process.argv[2];
     const path = require("path");
     const fs = require("fs");
     let src_dir = path.resolve(config.appPath, "examples");
     return new Promise((resolve) => {
         fs.readdir(src_dir, (err, items) => {
-            let item = items.find(item => item.startsWith(file_prefix));
+            let item = items.find(item => item.toLowerCase().startsWith(file_prefix.toLowerCase()));
             if (item != null) {
                 resolve(path.resolve(src_dir, item))
             } else {
@@ -112,7 +112,7 @@ function formate_webpack_config_with_analyzer(webpackConfig) {
 module.exports = {
     formate_webpack_config_with_cesium,
     runExampleFile,
-    findeExampleFile,
+    findExampleFile,
     beNeedAnalyze,
     formate_webpack_config_with_analyzer
 }

@@ -15,9 +15,9 @@ const haveCesium = pkg.dependencies["cesium"] != null || pkg.devDependencies['ce
         webpackConfig = helper.formate_webpack_config_with_cesium(webpackConfig, beProduction);
     }
     if (beRunExampleFile) {
-        let examplePath = await helper.findeExampleFile();
+        let examplePath = await helper.findExampleFile();
         if (examplePath != null) {
-            console.warn(`@@------------执行：${examplePath.substring(examplePath.lastIndexOf("\\"))}-----------------------`);
+            console.warn(`@@------------执行样例：${examplePath.substring(examplePath.lastIndexOf("\\"))}-----------------------`);
             webpackConfig.entry.app = examplePath + "/index.tsx";
         }
     }

@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export function RouterPage(props: { children?: JSX.Element | JSX.Element[] }) {
+export default function Page3() {
     return <React.Fragment>
-        <div>二级路由界面</div>
+        <div>page3（无额外bundle加载）</div>
         <Link to="/page1">跳转page1</Link>
         <div></div>
-        {props?.children}
+        <Link to="/page2">跳转page2</Link>
     </React.Fragment>
 }

@@ -20,18 +20,18 @@ export function LazyComp<T = {}>(
         targetProps?: T,
         onLoading?: JSX.Element
     }): JSX.Element {
-    let [Comp, setComp] = useState<ComponentType<T>>(null);
+    let [Comp, setComp] = useState<{ default: ComponentType<T> }>(null);
 
     useEffect(() => {
         (async () => {
             const comp = await props.target();
             if (comp.default != null) {
-                setComp(comp.default);
+                setComp(comp);
             } else {
                 throw new Error(" 'target' props of LazyComp must be default export ReactNode");
             }
-        })
+        })()
     }, []);
 
-    return Comp ? <Comp {...props.targetProps} /> : props.onLoading
+    return Comp ? <Comp.default {...props.targetProps} /> : (props.onLoading ?? <div></div>)
 }
