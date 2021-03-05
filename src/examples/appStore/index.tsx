@@ -6,7 +6,11 @@ import { UpdateStore } from "./updateStore";
 
 MyApp.start(
     (
-        <div>APP_STORE演示
+        <div>//----------------------------------------<br></br>
+            //<br></br>
+            //-------------APP_STORE演示----------<br></br>
+            //<br></br>
+            //-----------------------------------------<br></br>
             <UpdateStore />
             <div>--------------------------</div>
             <ClassComp />
