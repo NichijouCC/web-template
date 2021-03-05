@@ -189,10 +189,14 @@ MyApp.start(<APP />,{
 ```
 ### 4.公有组件与样例
 ```
-    1. CheckTokenRoute (跳转路由,验证token),使用样例见：examples->privateRoute_1
+    1. PrivateRoute (跳转路由,验证token),使用样例见：examples->privateRoute_1
     2. LazyComp (懒加载组件), 使用样例见：examples->lazyComp_1、examples->lazyComp_2
     3. examples->router_1：演示路由集中配置(包含多级路由)
-    4. TODO: echarts样例
+    4. examples->appStore：演示数据中心使用方式（class组件与function组件）
+    5. examples->lazyComp_1：演示lazyComp基本使用
+    6. examples->lazyComp_2：演示lazyComp配合路由做页面bundle分割
+    7. examples->privateRoute_1：演示privateRoute做界面权限检查跳转
+    7. TODO: echarts样例
 ```
 
 
