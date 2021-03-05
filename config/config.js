@@ -1,10 +1,18 @@
+/*
+ * @Author: your name
+ * @Date: 2021-03-05 12:02:42
+ * @LastEditTime: 2021-03-05 12:05:31
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /web-template/config/config.js
+ */
 const path = require('path');
 
 /**
  * 自定义配置(按照项目修改)
  */
 const customeConfig = {
-    assetBasePath: "/",
+    assetBasePath: "./",
     devServerPort: 8585,
 }
 

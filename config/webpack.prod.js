@@ -12,7 +12,7 @@ module.exports = {
     mode: "production",
     output: {
         ...baseConfig.output,
-        filename: '_static/js/[name].[contenthash:8].js'
+        filename: 'static/js/[name].[contenthash:8].js'
     },
     module: {
         ...baseConfig.module,
@@ -38,7 +38,7 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             limit: 8 * 1024,
-                            name: '_static/img/[name].[contenthash:8].[ext]',
+                            name: 'static/img/[name].[contenthash:8].[ext]',
                             outputPath: config.buildPath
                         }
                     },
@@ -46,7 +46,7 @@ module.exports = {
                         loader: 'file-loader',
                         exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
                         options: {
-                            name: '_static/media/[name].[contenthash:8].[ext]',
+                            name: 'static/media/[name].[contenthash:8].[ext]',
                         },
                     }
                 ]
@@ -65,7 +65,7 @@ module.exports = {
             minRatio: 0.8
         }),
         new MiniCssExtractPlugin({
-            filename: "_static/css/[name].[contenthash:8].css"
+            filename: "static/css/[name].[contenthash:8].css"
         }),
     ],
     optimization: {
