@@ -18,7 +18,7 @@ const haveCesium = pkg.dependencies["cesium"] != null || pkg.devDependencies['ce
         let examplePath = await helper.findeExampleFile();
         if (examplePath != null) {
             console.warn(`@@------------执行：${examplePath.substring(examplePath.lastIndexOf("\\"))}-----------------------`);
-            webpackConfig.entry.app = examplePath;
+            webpackConfig.entry.app = examplePath + "/index.tsx";
         }
     }
     if (beNeedAnalyze) {

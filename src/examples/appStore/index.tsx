@@ -5,7 +5,7 @@ import { FuncComp, FuncComp2 } from "./funcComp";
 
 MyApp.start(
     (
-        <div>
+        <div>APP_STORE演示
             <ClassComp />
             <ClassComp2 />
             <FuncComp />

@@ -62,7 +62,7 @@ function findeExampleFile() {
     const file_prefix = process.argv[2];
     const path = require("path");
     const fs = require("fs");
-    let src_dir = config.appPath;
+    let src_dir = path.resolve(config.appPath, "examples");
     return new Promise((resolve) => {
         fs.readdir(src_dir, (err, items) => {
             let item = items.find(item => item.startsWith(file_prefix));
