@@ -17,7 +17,7 @@ declare global {
     /**
      * 项目的数据中心
      */
-    var APP_STORE: IstoreData & AppStore<IstoreEvents<IstoreData>>;
+    var APP_STORE: IAppStore;
 
     /**
      * 项目配置
@@ -34,8 +34,10 @@ declare global {
     /**
      * 数据中心的类型定义
      */
-    interface IstoreData { }
+    interface IstoreData { [key: string]: any; }
 }
+
+export type IAppStore = IstoreData & AppStore<IstoreEvents<IstoreData>>;
 
 export type AppEnvType = "prod" | "test" | "dev";
 

@@ -14,7 +14,7 @@ module.exports = {
     ],
     devServer: {
         port: config.devServerPort,
-        host: 'localhost',
+        host: '0.0.0.0',
         contentBase: path.join(__dirname, '../public'),
         watchContentBase: true,
         publicPath: '/',
@@ -22,7 +22,7 @@ module.exports = {
         historyApiFallback: true,
         hot: true,
         clientLogLevel: 'error',
-        open: true,
+        open: false,
         overlay: false,
         quiet: false,
         noInfo: false,

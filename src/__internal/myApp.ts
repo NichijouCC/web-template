@@ -1,9 +1,10 @@
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { AppStore } from "./appStore";
-import { AppEnvType, IappOption, IstoreOption } from "./iapp";
+import { AppEnvType, IappOption, IAppStore, IstoreOption } from "./iapp";
 import privateConfig from '@/private_app_config.json'
-import { EventEmitter } from "@mtgoo/ctool";
+import { DebuffAction, EventEmitter } from "@mtgoo/ctool";
+import React from "react";
 
 /**
  * 项目内置浅封装框架
@@ -106,3 +107,4 @@ var _store_target: new () => any;
 export function MyStore(target: Function) {
     _store_target = target as any;
 }
+
