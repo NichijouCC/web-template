@@ -28,7 +28,7 @@ web项目基础模板 , 方便简单快速的开发web项目。
 
 项目提供:💁💁💁
 ```
-    1. 可配置环境，提供不同优先级的环境配置
+    1. 多入口设置项目不同环境的配置
     2. 全局共享的数据中心
     3. 可选的API请求配置
     4. 内置公共组件库：私有路由、懒加载组件等
@@ -63,7 +63,7 @@ yarn
     1. ``yarn start`` 启动项目（开发环境）
     2. ``yarn build`` 项目打包(生产环境)，``yarn build:test``项目打包(测试环境)
     3. ``build:analyze`` 项目打包分析
-    4. ``yarn choose [xx]`` 启动以【xx】开头且位于src文件夹下文件，作为入口文件启动项目
+    4. ``yarn choose [xx]`` 启动以【xx】开头且位于src/examples文件夹下的样例
 ```
 
 ## 注意：💢💢💢
@@ -152,26 +152,27 @@ MyApp.start(<APP />,{
 ```
     //使用 共享的数据
     let authinfo=APP_STORE.authInfo;
-
     // 修改 共享的数据
     APP_STORE.authInfo= {};
 
     // 数据中心数据 某属性更改事件监听
-    APP_STORE.on("xxatt",(newValue,oldValue)=>{
-
-    });
+    APP_STORE.on("xxatt",(newValue,oldValue)=>{});
     // 任意数据中心 属性数据修改事件监听
-    APP_STORE.on("attChange",(att,newValue,oldValue)=>{
+    APP_STORE.on("attChange",(att,newValue,oldValue)=>{});
 
-    });
+    //class组件使用
+    @mapAppStoreToProps(["xxAtt"])
+    export class ClassComp2 extends React.Component<{ xxAtt?: any }> {
+        render() {
+            return <div>【ClassComp2】xxAtt:{this.props.xxAtt}</div>
+        }
+    }
+    //function组件使用
+    export function FuncComp2() {
+        let storeAtt = useAppStore("xxAA");
+        return <div>【FuncComp2】xxAA:{storeAtt}</div>
+    }
 
-
-    // 业务事件管理举例：触发登录事件
-    APP_STORE.emit("login",{name:"xx"});
-    // 业务事件管理举例：监听登录事件
-    APP_STORE.on("login",(ev:{name:string})=>{
-        //xx
-    });
 ```
 
 ### 3.项目可选配置
