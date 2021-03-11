@@ -30,16 +30,23 @@ module.exports = {
                         loader: 'html-loader'
                     },
                     {
-                        test: /\.(scss|css)$/,
-                        use: [MiniCssExtractPlugin.loader, "css-loader"]
+                        test: /\.(less|css)$/,
+                        use: ["style-loader", "css-loader",
+                            {
+                                loader: "less-loader",
+                                options: {
+                                    lessOptions: {
+                                        javascriptEnabled: true,
+                                    }
+                                }
+                            }]
                     },
                     {
                         test: /\.(svg|jpg|jpeg|bmp|png|webp|gif|ico|ttf)$/,
                         loader: 'url-loader',
                         options: {
                             limit: 8 * 1024,
-                            name: 'static/img/[name].[contenthash:8].[ext]',
-                            outputPath: config.buildPath
+                            name: 'static/img/[name].[contenthash:8].[ext]'
                         }
                     },
                     {

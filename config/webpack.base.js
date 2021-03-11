@@ -50,7 +50,6 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             name: 'img/[name].[hash:8].[ext]',
-                            outputPath: config.buildPath,
                         }
                     },
                     {
