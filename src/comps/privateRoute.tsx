@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
+import { useAppStore } from '../__internal';
 
 /**
  * 路由验证token，跳转登录页面
@@ -15,16 +16,13 @@ export function PrivateRoute<T extends RouteProps = RouteProps, P = {}>(props: P
 }
 
 function MyRoute<T extends RouteProps = RouteProps, P = {}>({ component, ...rest }: P & T & { component: React.ElementType<P> }) {
-    let [beValid, setValid] = useState(true);
+    let authInfo = useAppStore("authInfo");
+
     let Comp = component as any;
     useEffect(() => {
-        if (APP_STORE.authInfo?.token == null && beValid) {
-            setValid(false);
-        } else {
-            //在这调用api检查token
-        }
+        //[可选] 在这调用api检查token,token无限将authInfo置为null
     })
-    return beValid ? <Comp {...rest} /> : <Redirect to={{
+    return authInfo?.token ? <Comp {...rest} /> : <Redirect to={{
         pathname: '/login',
         state: { from: rest.location }
     }} />
