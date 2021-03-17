@@ -1,5 +1,6 @@
 # web_template 🔥🔥🔥
 web项目浅框架集合了从项目搭建->项目开发->项目debug->项目部署各个环节的最佳实践😀, 方便简单快速的开发web项目。  
+
 浅框架提供:
 - 基础的webpack配置
 - 多入口项目配置(类似env)
@@ -91,18 +92,18 @@ MyApp.start(<APP />,{
 ```
 4. 作为状态管理器
 ```
-//class组件使用提供的帮助函数 mapAppStoreToProps
-@mapAppStoreToProps(["xxAtt"])
-export class ClassComp2 extends React.Component<{ xxAtt?: any }> {
-    render() {
-        return <div>【ClassComp2】xxAtt:{this.props.xxAtt}</div>
+    //class组件使用提供的帮助函数 mapAppStoreToProps
+    @mapAppStoreToProps(["xxAtt"])
+    export class ClassComp2 extends React.Component<{ xxAtt?: any }> {
+        render() {
+            return <div>【ClassComp2】xxAtt:{this.props.xxAtt}</div>
+        }
     }
-}
-//function组件使用提供的帮助函数 useAppStore
-export function FuncComp2() {
-    let storeAtt = useAppStore("xxAA");
-    return <div>【FuncComp2】xxAA:{storeAtt}</div>
-}
+    //function组件使用提供的帮助函数 useAppStore
+    export function FuncComp2() {
+        let storeAtt = useAppStore("xxAA");
+        return <div>【FuncComp2】xxAA:{storeAtt}</div>
+    }
 ```
 
 ### 4.可选拓展配置
@@ -174,8 +175,9 @@ export function FuncComp2() {
 ```
 
 ### 3. 项目搭建 - webpack配置
-    webpack配置基于公用和具体环境分开配置,设置上尽量精简。  
-配置目标：
+webpack配置基于公用和具体环境分开配置,设置上尽量精简。  
+
+webpack配置目标：
 > 1. 泛含义上的特性（less支持、压缩、分块等）
 > 2. ts/js支持
 > 3. 自动判断是否添加cesium的webpack配置
@@ -184,32 +186,34 @@ export function FuncComp2() {
 > 6. 配合框架保存APP_ENV/NODE_ENV/APP_VERSION等
 
 配置位于 ``config`` 文件夹下：
-- config.js                 #每个项目常规需要修改的配置文件。包含：开发端口等
-- helper.js                 #提供各种帮助函数，方便修改webpack配置
-- run.js                    #执行webpack指令文件
-- webpack.base.js           #webpack基础配置文件
-- webpack.dev.js            #webpack开发配置
-- webpack.prod.js           #webpack生产配置
-
+```
+├─ config
+|       ├─config.js                 #每个项目常规需要修改的配置文件。包含：开发端口等
+|       ├─helper.js                 #提供各种帮助函数，方便修改webpack配置
+|       ├─run.js                    #执行webpack指令文件
+|       ├─webpack.base.js           #webpack基础配置文件
+|       ├─webpack.dev.js            #webpack开发配置
+|       ├─webpack.prod.js           #webpack生产配置
+```
 指令:👉👉👉
-```
-    1. ``yarn start`` 启动项目（开发环境）
-    2. ``yarn build`` 项目打包(生产环境)，``yarn build:test``项目打包(测试环境)
-    3. ``build:analyze`` 项目打包分析
-    4. ``yarn choose [xx]`` 启动以【xx】开头且位于src/examples文件夹下的样例
-```
+- ``yarn start`` 启动项目（开发环境）
+- ``yarn build`` 项目打包(生产环境)，``yarn build:test``项目打包(测试环境)
+- ``build:analyze`` 项目打包分析
+- ``yarn choose [xx]`` 启动以【xx】开头且位于src/examples文件夹下的样例
 
 ### 4. 项目开发
-    提供的APP_STORE、公共组件、可选拓展等玩具可好好玩耍.😀
+提供的APP_STORE、公共组件、可选拓展等玩具可好好玩耍.😀
+
 ### 5. 项目DEBUG
-    vscode、chrome 提供了断点/log等充足的Debug工具 ，但有时还是需要配合其他工具完成debug。
+vscode、chrome 提供了断点/log等充足的Debug工具 ，但有时还是需要配合其他工具完成debug。  
+
 DEBUG需求情景如下：
 > 1. 需要使用域名访问本地项目。工具： [SwitchHosts](https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&tn=02003390_hao_pg&wd=SwitchHosts&oq=SwitchHosts)
 > 2. 如果api和web域名相同，SwitchHosts没法完成，只能上 nginx (在___debug_nginx 文件夹下配置了一些基础nginx配置)
 > 3. 浏览器报跨域，后端不方便修改，可使用.vscode/launch.json -> runtimeArgs 配置已非安全模式启动chrome。
 
 ### 6. 项目部署
-    //TODO：CICD
-    项目使用docker部署，docker配置文件包括(``docker-compose.yml``,``Dockerfile``)，在具体项目开发是可按需修改 ``docker-compose.yml ``配置外部端口和``networks``
+项目使用docker部署，docker配置文件包括(``docker-compose.yml``,``Dockerfile``)，在具体项目开发是可按需修改 ``docker-compose.yml ``配置外部端口和``networks``
+//TODO：CICD
 
 ![](https://note.youdao.com/yws/public/resource/4e0e610896b6c99a93c33ec3d0ed6b78/xmlnote/DDBF2E299689486D97F09CA5DEA65B12/16226)
