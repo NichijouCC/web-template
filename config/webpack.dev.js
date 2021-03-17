@@ -19,7 +19,7 @@ module.exports = {
         watchContentBase: true,
         publicPath: '/',
         compress: true,
-        historyApiFallback: true,
+        historyApiFallback: false,
         hot: true,
         clientLogLevel: 'error',
         open: false,

@@ -1,5 +1,5 @@
 import { EventEmitter } from "@mtgoo/ctool";
-import { AppStore, IstoreEvents } from "./appStore";
+import { AppStore, IStoreEvents } from "./appStore";
 
 declare global {
     /**
@@ -13,7 +13,7 @@ declare global {
     /**
      * 项目的配置
      */
-    var APP_CONFIG: IappConfig;
+    var APP_CONFIG: IAppConfig;
     /**
      * 项目的数据中心
      */
@@ -22,26 +22,26 @@ declare global {
     /**
      * 项目配置
      */
-    interface IappConfig {
+    interface IAppConfig {
         [k: string]: any
     }
     /**
      * 事件中心的事件类型定义
      */
-    interface IdataEvents {
+    interface IDataEvents {
         [k: string]: any
     }
     /**
      * 数据中心的类型定义
      */
-    interface IstoreData { [key: string]: any; }
+    interface IStoreData { [key: string]: any; }
 }
 
-export type IAppStore = IstoreData & AppStore<IstoreEvents<IstoreData>>;
+export type IAppStore = IStoreData & AppStore<IStoreEvents<IStoreData>>;
 
 export type AppEnvType = "prod" | "test" | "dev";
 
-export interface IappConfigs<T = IappConfig> {
+export interface IAppConfigs<T = IAppConfig> {
     common?: Partial<T>,
     dev?: Partial<T>,
     test?: Partial<T>,
@@ -51,7 +51,7 @@ export interface IappConfigs<T = IappConfig> {
 /**
  * app_store 配置项
  */
-export interface IstoreOption {
+export interface IStoreOption {
     /**
      * 是否将数据存入Storage，默认：“none”
      */
@@ -65,7 +65,7 @@ export interface IstoreOption {
 /**
  * 项目可选配置
  */
-export interface IappOption<T extends object = {}> {
+export interface IAppOption<T extends object = {}> {
     /**
      * 覆盖掉默认环境配置
      */
@@ -73,7 +73,7 @@ export interface IappOption<T extends object = {}> {
     /**
      * merge掉 privateConfig和publicConfig
      */
-    appConfig?: Partial<IappConfig>;
+    appConfig?: Partial<IAppConfig>;
     /**
      * 数据中心 - 存储的数据
      */
@@ -95,5 +95,3 @@ export interface IappOption<T extends object = {}> {
      */
     onInit?: () => void;
 }
-
-export type IappStore<T, K> = T & EventEmitter<K>;

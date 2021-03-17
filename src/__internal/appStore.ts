@@ -1,14 +1,14 @@
 import { EventEmitter } from "@mtgoo/ctool";
 import "reflect-metadata";
-import { IstoreOption } from "./iapp";
+import { IStoreOption } from "./iapp";
 
-interface IprivateEvents {
+interface IPrivateEvents {
     attChange: { att: string, newValue: any, oldValue: any }
 }
-type IattEvents<T extends object> = {
+type IAttEvents<T extends object> = {
     [key in keyof T]: { newValue: any, oldValue: any }
 }
-export type IstoreEvents<T extends object = {}> = IprivateEvents & IattEvents<T> & IdataEvents;
+export type IStoreEvents<T extends object = {}> = IPrivateEvents & IAttEvents<T> & IDataEvents;
 
 /**
  * 全局数据中心
@@ -16,9 +16,9 @@ export type IstoreEvents<T extends object = {}> = IprivateEvents & IattEvents<T>
  * @description
  * 需要被持久化的数据(存储到localStorage)使用 serialize 进行标记
  */
-export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
+export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
     private _target: any;
-    private constructor(data: any, opt: IstoreOption) {
+    private constructor(data: any, opt: IStoreOption) {
         super();
         this._target = data;
         let { saveItemToStorage = "none" } = opt || {};
@@ -42,8 +42,8 @@ export class AppStore<T = IstoreEvents<any>> extends EventEmitter<T> {
         localStorage.removeItem(storeKey);
     }
 
-    static create<P extends object = {}>(data: P, opt?: IstoreOption): AppStore<IstoreEvents<P>> & P {
-        let store = new AppStore<IstoreEvents<P>>(data, opt);
+    static create<P extends object = {}>(data: P, opt?: IStoreOption): AppStore<IStoreEvents<P>> & P {
+        let store = new AppStore<IStoreEvents<P>>(data, opt);
         Object.keys(data).forEach(item => {
             if (data[item] != null) {//如果赋值了初始值，覆盖storage中取到的值
                 store[item] = data[item];

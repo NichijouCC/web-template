@@ -1,7 +1,7 @@
 /**
  * APP_CONFIG 类型配置
  */
-export interface IcustomConfig {
+export interface ICustomConfig {
     //-----------------------------------------------------
     //                  项目配置类型定义在这里
     //-----------------------------------------------------

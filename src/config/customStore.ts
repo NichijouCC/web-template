@@ -9,13 +9,13 @@ export class CustomStore {
     //                  项目需要的共享数据定义在这里
     //----------------------------------------------------
     @Att
-    authInfo: IauthInfo;
+    authInfo: IAuthInfo;
 }
 
 /**
  * 数据中心的自定义事件
  */
-export interface IcustomStoreEvents {
+export interface ICustomStoreEvents {
     //-----------------------------------------------------
     //                  项目需要的事件定义在这里
     //-----------------------------------------------------
@@ -25,6 +25,6 @@ export interface IcustomStoreEvents {
 /**
  * 登录后的一些数据存储起来,例如：token
  */
-export interface IauthInfo {
+export interface IAuthInfo {
     token: string;
 }

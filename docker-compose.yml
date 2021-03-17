@@ -6,6 +6,8 @@ services:
     restart: always
     expose: 
       - 80
+    # ports: 
+    #   - 8000:80
 #     networks:
 #       - production_net
 # networks:

@@ -15,7 +15,7 @@ export function initAxiosConfig() {
 
     axios.interceptors.response.use(
         response => {
-            let data = response.data as IcustomResponse;
+            let data = response.data as ICustomResponse;
             if ((data.code == 200 || 2000) || data.code == null) {
                 return data as any;
             } else {
@@ -30,12 +30,18 @@ export function initAxiosConfig() {
                 }
                 return Promise.reject(data) as any;
             }
-        });
+        },
+        err => {
+            //-----------------------------------------------------------
+            //              处理公共异常code状态（可选）
+            //-----------------------------------------------------------
+        }
+    );
 }
 /**
  * 规范化的数据返回格式
  */
-interface IcustomResponse<T = any> {
+interface ICustomResponse<T = any> {
     /**
      * 状态码
      */
@@ -70,12 +76,12 @@ interface IcustomResponse<T = any> {
 
 declare module 'axios' {
     export interface AxiosInstance {
-        get<T = any>(url: string, config?: AxiosRequestConfig): Promise<IcustomResponse<T>>;
-        delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<IcustomResponse<T>>;
-        head<T = any>(url: string, config?: AxiosRequestConfig): Promise<IcustomResponse<T>>;
-        options<T = any>(url: string, config?: AxiosRequestConfig): Promise<IcustomResponse<T>>;
-        post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<IcustomResponse<T>>;
-        put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<IcustomResponse<T>>;
-        patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<IcustomResponse<T>>;
+        get<T = any>(url: string, config?: AxiosRequestConfig): Promise<ICustomResponse<T>>;
+        delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<ICustomResponse<T>>;
+        head<T = any>(url: string, config?: AxiosRequestConfig): Promise<ICustomResponse<T>>;
+        options<T = any>(url: string, config?: AxiosRequestConfig): Promise<ICustomResponse<T>>;
+        post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ICustomResponse<T>>;
+        put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ICustomResponse<T>>;
+        patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ICustomResponse<T>>;
     }
 }
