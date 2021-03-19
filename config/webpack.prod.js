@@ -81,6 +81,18 @@ module.exports = {
             minChunks: 2,
             maxInitialRequests: 5,
             cacheGroups: {
+                vendor: {
+                    priority: 20,
+                    minSize: 400 * 1000,
+                    test: /[\\/]node_modules[\\/]/,
+                    name(module, chunks, cacheGroupKey) {
+                        // get the name. E.g. node_modules/packageName/not/this/part.js
+                        // or node_modules/packageName
+                        const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+                        // npm package names are URL-safe, but some servers don't like @ symbols
+                        return `npm.${packageName.replace('@', '')}`;
+                    },
+                },
                 // 提取公共模块
                 commons: {
                     chunks: 'all',
