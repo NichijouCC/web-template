@@ -1,6 +1,9 @@
 import React from "react";
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom'
 import { MyApp } from "../../__internal";
+import '@/config/customStore';
+
+
 import Page1 from "./page1";
 import Page3 from "./page3";
 import Page4 from "./page4";

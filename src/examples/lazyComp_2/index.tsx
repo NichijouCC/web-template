@@ -2,6 +2,9 @@ import React from "react";
 import { LazyComp } from "../../comps/lazyComp";
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom'
 import { MyApp } from "../../__internal";
+import '@/config/customStore';
+
+
 import Page3 from "./page3";
 /**
  * LazyComp配合路由做界面bundle分割

@@ -62,6 +62,9 @@ APP_STORE提供功能包含:a. 全局共享数据管理 b.事件通信中心 c.�
 > 2. 在 src-> config->customStore.ts 中定义 项目需要的通信事件(方便在使用APP_STORE.on和.emit的时候获取类型提示，默认：any)，
 > 3. 数据中心初始化配置项： ``MyApp.start 启动参数中的 storeOpt 和 store_data``
 
+Tip:
+1. 需要被存储的数据需要用@att标记
+
 - 功能使用情景演示举例
 1. 作为共享数据中心
 ```
@@ -77,17 +80,21 @@ APP_STORE提供功能包含:a. 全局共享数据管理 b.事件通信中心 c.�
 ```
 
 3. 数据存储
+    loadDataOnOpen默认true,即会将存储的数据（@att标记的数据）在启动的时候赋值给store；
+    saveItemToStorage默认为none，配置为某storage即会将store的数据按照属性存到对应storage中
 ```
     MyApp.start(<APP />, {
         //store配置项（可选）
         storeOpt:{
+            // 目标对象;如果为null,即为@MyStore 标记的对象
+            target?: T;
+            //store初始化值;
+            initData?: Partial<T>;
             // 是否将数据存入Storage(可选："localStorage"、"sessionStorage"、"none")，默认：“none”
             saveItemToStorage: "localStorage";
             // 启动的时候加载上次的数据，默认：true
             loadDataOnOpen: false;
         },
-        //（可选）数据中心数据。配置这个会覆盖掉MyStore标注的数据中心
-        store_data：{}
     });
 ```
 4. 作为状态管理器
@@ -105,6 +112,18 @@ APP_STORE提供功能包含:a. 全局共享数据管理 b.事件通信中心 c.�
         return <div>【FuncComp2】xxAA:{storeAtt}</div>
     }
 ```
+5. 不使用@MyStore
+```
+    class XXStore {
+        myAtt: string;
+    }
+    MyApp.start(<APP />, {
+        storeOpt: {
+            target: new XXStore()
+        }
+    });
+```
+
 
 ### 4.可选拓展配置
     在 ``src/extends``提供各种配置，在具体项目开发的时候可以按需引入。不需要的拓展可在一开始移除对应依赖包
@@ -143,7 +162,6 @@ APP_STORE提供功能包含:a. 全局共享数据管理 b.事件通信中心 c.�
 ### 1. 项目搭建 - 包依赖
 包依赖:
 ```
-    - "reflect-metadata": "^0.1.13" //本框架 依赖的包
     - "@mtgoo/ctool": "^0.0.16",// nodejs公共方法库，本框架依赖里面部分方法，项目开发中也可以按需引入
     - "axios": "^0.21.0",       // 可选配置【src/extends/axios】 依赖的包
     - "react": "^16.12.0",

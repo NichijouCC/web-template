@@ -4,6 +4,8 @@ import Page1 from "./page1";
 import Page2 from "./page2";
 import { PrivateRoute } from "../../comps/privateRoute";
 import { MyApp } from "../../__internal";
+import '@/config/customStore';
+
 import Page3 from "./page3";
 import Login from "./login";
 

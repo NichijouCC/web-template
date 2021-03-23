@@ -1,5 +1,4 @@
 import { EventEmitter } from "@mtgoo/ctool";
-import "reflect-metadata";
 import { IStoreOption } from "./iapp";
 
 interface IPrivateEvents {
@@ -9,6 +8,10 @@ type IAttEvents<T extends object> = {
     [key in keyof T]: { newValue: any, oldValue: any }
 }
 export type IStoreEvents<T extends object = {}> = IPrivateEvents & IAttEvents<T> & IDataEvents;
+const SAVE = Symbol("save");
+const LOAD = Symbol("load");
+const STORE_KEY = Symbol("__private__store");
+const STORE_ATT_KEY = Symbol("_store_att");
 
 /**
  * 全局数据中心
@@ -17,15 +20,50 @@ export type IStoreEvents<T extends object = {}> = IPrivateEvents & IAttEvents<T>
  * 需要被持久化的数据(存储到localStorage)使用 serialize 进行标记
  */
 export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
-    private _target: any;
-    private constructor(data: any, opt: IStoreOption) {
+    private _target: object;
+    private _proxyTarget: object;
+    /**
+     * For Debug：清除内部数据
+     */
+    static hidePrivateData: boolean = true;
+    private constructor(opt: IStoreOption<any> = {}) {
         super();
-        this._target = data;
-        let { saveItemToStorage = "none" } = opt || {};
+        let { target, initData, saveItemToStorage = "none" } = opt;
+        if (target == null) {
+            if (_store_target == null) {
+                throw new Error(`if storeOpt.target == null, @MyStore must be use and "src/config/customStore" must be import in index.tsx`);
+            } else {
+                target = new _store_target();
+            }
+        }
+        for (let key in initData) {
+            target[key] = initData[key];
+        }
+
+        this._target = target;
+        if (opt?.loadDataOnOpen != false) {
+            let storageData = this.loadDataFromLocalStorage();
+            for (let key in storageData) {
+                if (target[key] == null) {
+                    target[key] = storageData[key];
+                }
+            }
+        }
+        this._proxyTarget = new Proxy(target, {
+            set: (obj, prop, value) => {
+                obj[prop] = value;
+                this.emit("attChange" as any, { att: prop.toString(), newValue: value, oldValue: this[prop] } as any);
+                this.emit(prop.toString() as any, { newValue: value, oldValue: this[prop] } as any)
+                return true;
+            }
+        });
+
         if (saveItemToStorage != "none") {
             let storage = opt.saveItemToStorage == "localStorage" ? localStorage : sessionStorage;
             this._clearStore = () => storage.clear();
-
+            for (const key in target) {
+                storage.setItem(key, JSON.stringify(target[key]));
+            }
             this.on("attChange" as any, (ev: any) => {
                 let { att, newValue } = ev;
                 storage.setItem(att, JSON.stringify(newValue));
@@ -36,26 +74,24 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
             this.saveDataToLocalStorage();
         }, false);
 
-        if (opt?.loadDataOnOpen != false) {
-            this.loadDataFromLocalStorage();
+        if (AppStore.hidePrivateData) {
+            localStorage.removeItem(STORE_KEY.toString());
         }
-        localStorage.removeItem(storeKey);
     }
 
-    static create<P extends object = {}>(data: P, opt?: IStoreOption): AppStore<IStoreEvents<P>> & P {
-        let store = new AppStore<IStoreEvents<P>>(data, opt);
-        Object.keys(data).forEach(item => {
-            if (data[item] != null) {//如果赋值了初始值，覆盖storage中取到的值
-                store[item] = data[item];
-            }
-        });
-
+    static create<P extends object = {}>(opt?: IStoreOption<P>): AppStore<IStoreEvents<P>> & P {
+        let store = new AppStore<IStoreEvents<P>>(opt);
         let storedData = new Proxy(store, {
             set: function (obj, prop, value) {
-                obj[prop] = value;
-                store.emit("attChange", { att: prop.toString(), newValue: value, oldValue: this[prop] });
-                store.emit(prop.toString(), { newValue: value, oldValue: this[prop] })
+                obj._proxyTarget[prop] = value;
                 return true;
+            },
+            get: function (obj, property) {
+                if (obj._proxyTarget[property] != null) {
+                    return obj._proxyTarget[property]
+                } else {
+                    return obj[property]
+                }
             }
         });
         return storedData as any;
@@ -65,39 +101,41 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
      * 将需要持久化的数据存储到LocalStorage中
      */
     private saveDataToLocalStorage() {
-        let store: string[] = Reflect.getMetadata(storeKey, this._target);
-
-        let needStoreData = {};
-        store?.forEach(key => {
-            let value = Reflect.get(this, key);
-            needStoreData[key] = value;
+        let storeAtts: string[] = this._target.constructor[STORE_ATT_KEY];
+        let result = {};
+        storeAtts?.forEach(key => {
+            Reflect.set(result, key, this._target[key]);
         })
-
-        localStorage.setItem(storeKey, JSON.stringify(needStoreData))
+        localStorage.setItem(STORE_KEY.toString(), JSON.stringify(result))
     }
 
     /**
      * 从localStorage加载被持久化的数据
      */
     private loadDataFromLocalStorage() {
-        let store: string[] = Reflect.getMetadata(storeKey, this._target);
-        let storedInfo = JSON.parse(localStorage.getItem(storeKey));
-        if (storedInfo) {
-            store?.forEach(key => {
-                Reflect.set(this, key, storedInfo[key]);
-            })
-        }
+        let storedInfo = JSON.parse(localStorage.getItem(STORE_KEY.toString()));
+        return storedInfo;
     }
 
     private _clearStore = () => { };
+
+    [SAVE]() {
+        this.saveDataToLocalStorage();
+    }
+
+    [LOAD]() {
+        let storageData = this.loadDataFromLocalStorage();
+        for (const key in storageData) {
+            this._target[key] = storageData[key];
+        }
+    }
     /**
      * 清空store的数据
      */
     clear(clearStorage: boolean = true) {
-        let store: string[] = Reflect.getMetadata(storeKey, this._target);
-        store?.forEach(key => {
-            Reflect.set(this, key, null);
-        });
+        for (const key in this._target) {
+            this._target[key] = undefined;
+        }
         if (clearStorage) this._clearStore();
     }
 }
@@ -105,14 +143,15 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
 /**
  * 标记需要持久化的数据 
  */
-export function Att<K>(target: K, name: string) {
-    let store: string[] = Reflect.getMetadata(storeKey, target);
+export function Att(target: any, name: string) {
+    let store: string[] = target.constructor[STORE_ATT_KEY];
     if (store == null) {
-        Reflect.defineMetadata(storeKey, [name], target);
-    } else {
-        store.push(name);
+        store = target.constructor[STORE_ATT_KEY] = [];
     }
+    store.push(name);
 }
 
-
-const storeKey = "__private__store";
+var _store_target: new () => any;
+export function MyStore(target: Function) {
+    _store_target = target as any;
+}

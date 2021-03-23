@@ -34,7 +34,7 @@ export class MyApp<K extends object = {}, T extends object = {}> {
      */
     private constructor(opt?: IAppOption<T>) {
         console.info(`版本信息：${APP_VERSION}`);
-        let { appEnv: app_env, appConfig, storeData, storeOpt, appDomain, onInit } = opt || {};
+        let { appEnv: app_env, appConfig, storeOpt, appDomain, onInit } = opt || {};
         //APP_VERSION
         this.version = APP_VERSION;
         (global as any).APP_VERSION = APP_VERSION;
@@ -44,8 +44,7 @@ export class MyApp<K extends object = {}, T extends object = {}> {
         //初始化APP_CONFIG
         this.initConfig(appConfig);
         //初始化APP_STORE
-        let storeTarget = storeData ?? (_store_target ? new (_store_target as any)() : {})
-        this.initAppStore(storeTarget as any, storeOpt);
+        this.initAppStore(storeOpt);
         //修改domain
         if (appDomain) {
             this.initAppDomain(appDomain);
@@ -70,9 +69,9 @@ export class MyApp<K extends object = {}, T extends object = {}> {
     /**
      * 初始化数据中心
      */
-    private initAppStore(data: T, opt?: IStoreOption) {
-        let _store = AppStore.create(data, opt);
-        this.store = _store;
+    private initAppStore(opt?: IStoreOption<T>) {
+        let _store = AppStore.create(opt);
+        this.store = _store as any;
         (global as any).APP_STORE = _store;
         return _store;
     }
@@ -95,8 +94,4 @@ export class MyApp<K extends object = {}, T extends object = {}> {
     }
 }
 
-var _store_target: new () => any;
-export function MyStore(target: Function) {
-    _store_target = target as any;
-}
 

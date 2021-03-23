@@ -51,7 +51,15 @@ export interface IAppConfigs<T = IAppConfig> {
 /**
  * app_store 配置项
  */
-export interface IStoreOption {
+export interface IStoreOption<T extends object> {
+    /**
+     * 目标对象;如果为null,即为@MyStore 标记的对象
+     */
+    target?: T;
+    /**
+     * store初始化值
+     */
+    initData?: Partial<T>;
     /**
      * 是否将数据存入Storage，默认：“none”
      */
@@ -75,16 +83,9 @@ export interface IAppOption<T extends object = {}> {
      */
     appConfig?: Partial<IAppConfig>;
     /**
-     * 数据中心 - 存储的数据
-     */
-    storeData?: T,
-    /**
      * 数据中心 - 配置项
      */
-    storeOpt?: {
-        saveItemToStorage?: "localStorage" | "sessionStorage" | "none";
-        loadDataOnOpen?: boolean;
-    },
+    storeOpt?: IStoreOption<T>,
     /**
      * domain改写
      */
