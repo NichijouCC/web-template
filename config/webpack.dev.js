@@ -13,8 +13,8 @@ module.exports = {
         ...baseConfig.plugins,
     ],
     devServer: {
-        port: config.devServerPort,
         host: '0.0.0.0',
+        port: config.devServerPort,
         contentBase: path.join(__dirname, '../public'),
         watchContentBase: true,
         publicPath: '/',

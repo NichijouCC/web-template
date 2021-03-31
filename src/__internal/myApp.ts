@@ -59,6 +59,7 @@ export class MyApp<K extends object = {}, T extends object = {}> {
                 break;
             case "test":
                 this.config = { ...privateConfig.common, ...publicAppConfig.common, ...privateConfig.test, ...publicAppConfig.test, ...config } as K;
+                break;
             case "prod":
             default:
                 this.config = { ...privateConfig.common, ...publicAppConfig.common, ...privateConfig.prod, ...publicAppConfig.prod, ...config } as K;
