@@ -11,12 +11,12 @@ module.exports = api => {
                         "chrome": "77",
                     },
                 } : {
-                        "corejs": "3.0.0",
-                        "useBuiltIns": "usage",
-                        "targets": {
-                            "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
-                        }
+                    "corejs": "3.0.0",
+                    "useBuiltIns": "usage",
+                    "targets": {
+                        "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
                     }
+                }
             ],
             "@babel/react",
             ['@babel/typescript', {

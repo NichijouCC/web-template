@@ -5,6 +5,11 @@ const helper = require("./helper");
 const pkg = require("../package.json");
 const config = require("./config");
 
+
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const smp = new SpeedMeasurePlugin();
+
+
 const beProduction = process.env.NODE_ENV == "production";
 let webpackConfig = beProduction ? require('./webpack.prod') : require('./webpack.dev');
 const beRunExampleFile = helper.runExampleFile();
@@ -26,22 +31,13 @@ const haveCesium = pkg.dependencies["cesium"] != null || pkg.devDependencies['ce
         webpackConfig = helper.formate_webpack_config_with_analyzer(webpackConfig);
     }
 
+    if (config.showCostedBuildTime) {
+        webpackConfig = smp.wrap(webpackConfig);
+    }
+
     if (!beProduction) {
         const compiler = webpack(webpackConfig);
-        const devServerOptions = Object.assign({}, webpackConfig.devServer, {
-            stats: {
-                colors: true,
-                children: false,
-                chunks: false,
-                chunkModules: false,
-                modules: false,
-                builtAt: false,
-                entrypoints: false,
-                assets: false,
-                version: false,
-                errorDetails: true,
-            },
-        });
+        const devServerOptions = webpackConfig.devServer;
         const server = new WebpackDevServer(compiler, devServerOptions);
         server.listen(devServerOptions.port, () => {
             console.info(`Starting server on http://${devServerOptions.host}:${devServerOptions.port}`);

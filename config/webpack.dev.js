@@ -31,5 +31,18 @@ module.exports = {
         },
         proxy: {},
         disableHostCheck: true,
+        stats: {// 设置控制台的提示信息
+            colors: true,
+            children: false,
+            chunks: false,
+            chunkModules: false,
+            modules: false,
+            builtAt: false,
+            entrypoints: false,
+            assets: false,
+            version: false,
+            errorDetails: true,
+            profile: true
+        },
     }
 }

@@ -26,10 +26,6 @@ module.exports = {
                         use: "babel-loader",
                     },
                     {
-                        test: /\.(html)$/,
-                        loader: 'html-loader'
-                    },
-                    {
                         test: /\.(less|css)$/,
                         use: ["style-loader", "css-loader",
                             {

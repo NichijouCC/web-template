@@ -27,11 +27,7 @@ module.exports = {
                         test: /\.(j|t)sx?$/,
                         include: config.appPath,
                         exclude: config.node_modules_path,
-                        use: "babel-loader",
-                    },
-                    {
-                        test: /\.(html)$/,
-                        loader: 'html-loader'
+                        use: ["thread-loader", "cache-loader", "babel-loader"],
                     },
                     {
                         test: /\.(less|css)$/,
@@ -73,9 +69,11 @@ module.exports = {
         ]
     },
     plugins: [
-        new CopyWebpackPlugin([
-            { from: 'public', ignore: ['index.html'] },
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: 'public', globOptions: { ignore: ['index.html'] } },
+            ]
+        }),
         new HtmlWebpackPlugin({
             template: config.indexHtmlPath,
             minify: {
@@ -102,5 +100,9 @@ module.exports = {
             'process.env.APP_ENV': JSON.stringify(process.env.APP_ENV),
             APP_VERSION: JSON.stringify(`Version${pkg.version} - ${new Date().toUTCString()}`),
         })
-    ]
+    ],
+    cache: {
+        type: 'memory',
+    },
+    // profile: true
 }

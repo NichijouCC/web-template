@@ -13,7 +13,8 @@ const staticConfig = {
     buildPath: path.resolve(__dirname, '../build'),
     appPath: path.resolve(__dirname, '../src'),
     node_modules_path: path.resolve(__dirname, "../node_modules"),
-    indexHtmlPath: path.resolve(__dirname, "../public/index.html"),
+    indexHtmlPath: path.resolve(__dirname, "../src/index.html"),
+    showCostedBuildTime: false
 }
 module.exports = { ...staticConfig, ...customConfig }
 

@@ -39,9 +39,13 @@ function formate_webpack_config_with_cesium(webpackConfig, beProduction) {
                 // Define relative base path in cesium for loading assets
                 'CESIUM_BASE_URL': JSON.stringify('')
             }),
-            new CopyWebpackPlugin([
-                { from: cesiumPath, ignore: ['Cesium.js'] }
-            ]),
+            new CopyWebpackPlugin(
+                {
+                    patterns: [
+                        { from: cesiumPath, globOptions: { ignore: ['Cesium.js'] } }
+                    ]
+                }
+            ),
         ]
     }
 }
