@@ -13,7 +13,7 @@ export class CustomStore {
 }
 
 /**
- * 数据中心的自定义事件
+ * APP_STORE的自定义事件
  */
 export interface ICustomStoreEvents {
     //-----------------------------------------------------

@@ -1,8 +1,7 @@
 import { ReactElement } from "react";
 import ReactDOM from "react-dom";
 import { AppStore } from "./appStore";
-import { AppEnvType, IAppOption, IStoreOption } from "./iapp";
-import privateConfig from '@/private_app_config.json'
+import { IEnterConfig, IStoreOption } from "./iapp";
 
 /**
  * 项目内置浅封装框架
@@ -20,50 +19,47 @@ export class MyApp<K extends object = {}, T extends object = {}> {
     /**
      * 项目的当前环境
      */
-    env: AppEnvType;
+    env: string;
     /**
      * 项目数据中心
      */
     store: AppStore<{ [P in keyof T]: { newValue: T[P]; oldValue: T[P]; }; }> & T;
-
-
     /**
      * 启动项目,
      * @param root 项目组件根节点
      * @param opt 
      */
-    private constructor(opt?: IAppOption<T>) {
+    private constructor(opt: IEnterConfig<T> = {}) {
         console.info(`版本信息：${APP_VERSION}`);
-        let { appEnv: app_env, appConfig, storeOpt, appDomain, onInit } = opt || {};
+        let { node_env, app_env, store_opts, app_domain, onInit, private_config } = opt;
+        (global as any).NODE_ENV = node_env || public_project_config.node_env || private_config?.node_env || process.env.NODE_ENV || "production";
+
         //APP_VERSION
         this.version = APP_VERSION;
         (global as any).APP_VERSION = APP_VERSION;
+
         //APP_ENV
-        this.env = app_env || process.env.APP_ENV || "prod" as any;
+        this.env = app_env || public_project_config.app_env || private_config?.app_env || process.env.APP_ENV || "prod";
         (global as any).APP_ENV = this.env;
+
         //初始化APP_CONFIG
-        this.initConfig(appConfig);
+        this.initAppConfig(opt);
+
         //初始化APP_STORE
-        this.initAppStore(storeOpt);
+        this.initAppStore(store_opts);
+
         //修改domain
-        if (appDomain) {
-            this.initAppDomain(appDomain);
+        if (app_domain) {
+            this.initAppDomain(app_domain);
         }
         onInit?.();
     }
 
-    private initConfig(config: Partial<IAppConfig>) {
-        switch (this.env) {
-            case 'dev':
-                this.config = { ...privateConfig.common, ...publicAppConfig.common, ...privateConfig.dev, ...publicAppConfig.dev, ...config } as K;
-                break;
-            case "test":
-                this.config = { ...privateConfig.common, ...publicAppConfig.common, ...privateConfig.test, ...publicAppConfig.test, ...config } as K;
-                break;
-            case "prod":
-            default:
-                this.config = { ...privateConfig.common, ...publicAppConfig.common, ...privateConfig.prod, ...publicAppConfig.prod, ...config } as K;
-        }
+    private initAppConfig(config: IEnterConfig) {
+        let enter_config = config;
+        let public_config = public_project_config.app_config;
+        let private_config = config.private_config?.app_config;
+        this.config = { ...private_config?.common, ...private_config?.[this.env], ...public_config.common, ...public_config[this.env], ...enter_config };
         (global as any).APP_CONFIG = this.config;
     }
 
@@ -88,11 +84,9 @@ export class MyApp<K extends object = {}, T extends object = {}> {
         }
     }
 
-    static start<T extends object = {}>(root: ReactElement, opt?: IAppOption<T>) {
+    static start<T extends object = {}>(root: ReactElement, opt?: IEnterConfig<T>) {
         let app = new MyApp(opt);
         ReactDOM.render(root, document.getElementById("root"));
         return app;
     }
 }
-
-

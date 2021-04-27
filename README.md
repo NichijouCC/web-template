@@ -1,5 +1,5 @@
 # web_template 🔥🔥🔥
-    基于 REACT+WEBPACK+TYPESCRIPT 实现的web脚手架,目的是通过提供一系列通用工具并集合项目开发各环节的最佳实践，方便简单快速的开发web项目。  
+基于 REACT+WEBPACK+TYPESCRIPT 实现的web脚手架,目的是通过提供一系列通用工具并集合项目开发各环节的最佳实践，方便简单快速的开发web项目。  
 
 浅框架提供:
 - 基础的webpack配置
@@ -31,27 +31,26 @@ MyApp.start(<APP />,{
 提供全局变量：
 ```
     - APP_VERSION： 项目版本信息
-    - APP_ENV：     项目环境（"prod" | "test" | "dev"）
+    - NODE_ENV:     NODE环境("development"|"production"),默认："production"
+    - APP_ENV：     项目环境（"prod" | "test" | "dev"）,默认："prod"
     - APP_CONFIG：  项目配置
     - APP_STORE:    项目数据中心
 ```
 
 ### 2.浅框架-项目配置（APP_CONFIG） 管理 ⚙⚙⚙
-    项目的配置由多个配置入口的配置组合为最终的APP_CONFIG. 
+    ``MyApp.start`` 的时候内部会先判断当前的app_env,根据app_env读取配置文件中的配置作为app_config。项目的配置有多个配置入口的. 
 配置入口如下：
->  a.(可选)公有配置(public->public_app_config.js)  
->  b.(可选)私有配置(src->private_app_config.json)  
+>  a.(可选)公有配置(public->public.config.js)  
+>  b.(可选)私有配置(src->private.config.json)  
 >  c.(可选)Myapp.start 的启动参数 app_config
 
 配置优先级：  
-> 私有配置common < 公有配置common < 私有配置具体环境 < 公有配置具体环境 < Myapp.start 的启动参数 app_config
+>多环境配置： 私有配置common  < 私有配置具体环境 < 公有配置common< 公有配置具体环境 < Myapp.start 的启动参数 app_config
 
 公/私有配置文件固定结构:
 ```
     common:   各环境common配置  
-    dev:      开发下的项目配置  
-    test:     测试下的项目配置  
-    prod:     生产下的项目配置  
+    xx:      xx环境下的项目配置
 ```
 
 ### 3.浅框架-数据中心（APP_STORE）管理
@@ -175,17 +174,21 @@ Tip:
 ```
 ├─ config                              # webpack配置管理目录                   (必选，固定目录，可按需增加webpack配置)
 ├─ public                              # 项目公共资源目录                       (必选，固定目录,按需添加额外资源)
-|       ├─index.html                   # 项目html文件                          (必选，固定文件)
 |       ├─public_app_config.js         # 项目公共配置文件                       (必选，固定文件)
 ├─ src                                 # 项目源码目录                           (固定目录)
 |       ├─__internal                   # 项目框架源码目录                       (必选，固定目录)
 |       ├─comps                        # 项目公共组件目录                       (可选，推荐目录)
 |       ├─config                       # 项目（app_store和app_config）自定义配置目录    (必选，固定目录)
+|              ├─myAppConfig.ts        # 自定义app_config的类型(获得提示)        (可选,推荐)
+|              ├─myProjectConfig.ts    # 自定义project_config                   (可选，用于隐藏不需要暴露的配置)
+|              ├─myStore.ts            # 自定义store数据和事件类型               (可选，推荐)
+|              ├─types.ts              # 拓展internal层的类型                   (可选，推荐)
 |       ├─examples                     # 公共组件演示和功能演示样例目录          (不需要)
 |       ├─pages                        # 项目分页管理目录                       (可选，推荐目录)
-|       ├─extends                      # 可选拓展配置管理目录                    (可选，推荐目录)
+|       ├─app.tsx                      # 界面开始组件                           (可选，推荐文件)
+|       ├─extends                      # 可选拓展配置管理目录                   (可选，推荐目录)
+|       ├─index.html                   # 项目html文件                          (必选，固定文件)
 |       ├─index.tsx                    # 项目启动文件                           (必选，固定文件)
-|       ├─private_app_config.json      # 项目私有配置文件                       (必选，固定文件)
 ├─ .eslintrc.js                        # eslint配置文件                         (可选，推荐)
 ├─ babel.config.js                     # babel配置文件                          (必选)
 ├─ docker-compose.yml                  # docker-compose文件                     (可选，推荐)
@@ -206,7 +209,7 @@ webpack配置目标：
 配置位于 ``config`` 文件夹下：
 ```
 ├─ config
-|       ├─config.js                 #每个项目常规需要修改的配置文件。包含：开发端口等
+|       ├─config.js                 #每个项目常规根据需要修改webpack配置的文件。包含：开发端口等
 |       ├─helper.js                 #提供各种帮助函数，方便修改webpack配置
 |       ├─run.js                    #执行webpack指令文件
 |       ├─webpack.base.js           #webpack基础配置文件

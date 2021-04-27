@@ -10,7 +10,7 @@ import { useAppStore } from '../__internal';
 export function PrivateRoute<T extends RouteProps = RouteProps, P = {}>(props: P & T & { component: React.ElementType<P> }) {
     let PrivateRouteComp = MyRoute as any;
     let { component, ...rest } = props;
-    return <Route {...rest} render={() => {
+    return <Route {...(rest as any)} render={() => {
         return (<PrivateRouteComp {...props} />)
     }} />
 }

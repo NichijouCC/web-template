@@ -1,7 +1,7 @@
 import React from "react";
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom'
 import { MyApp } from "../../__internal";
-import '@/config/customStore';
+import '@/config/myStore';
 
 
 import Page1 from "./page1";
@@ -22,4 +22,8 @@ export function AllRoutes() {
     </Router>
 }
 
+
+/**
+ * 演示集中配置多级路由
+ */
 MyApp.start(< AllRoutes />)

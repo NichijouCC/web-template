@@ -3,8 +3,11 @@ import { MyApp } from "../../__internal";
 import { ClassComp, ClassComp2 } from "./classComp";
 import { FuncComp, FuncComp2 } from "./funcComp";
 import { UpdateStore } from "./updateStore";
-import '@/config/customStore';
+import '@/config/myStore';
 
+/**
+ * APP_STORE使用演示
+ */
 MyApp.start(
     (
         <div>//----------------------------------------<br></br>

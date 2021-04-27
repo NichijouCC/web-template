@@ -1,11 +1,14 @@
-import { EventEmitter } from "@mtgoo/ctool";
 import { AppStore, IStoreEvents } from "./appStore";
 
 declare global {
     /**
-     * 项目环境
+     * node环境，默认：production
      */
-    var APP_ENV: AppEnvType;
+    var NODE_ENV: "production" | "development";
+    /**
+     * 项目环境, 默认：prod
+     */
+    var APP_ENV: string;
     /**
      * 项目版本
      */
@@ -21,6 +24,15 @@ declare global {
 
     /**
      * 项目配置
+     */
+    interface IProjectConfig {
+        node_env?: "production" | "development";
+        app_env?: string;
+        app_config?: { common: Partial<IAppConfig> } & { [env: string]: Partial<IAppConfig> }
+    }
+
+    /**
+     * app_config配置
      */
     interface IAppConfig {
         [k: string]: any
@@ -39,7 +51,7 @@ declare global {
 
 export type IAppStore = IStoreData & AppStore<IStoreEvents<IStoreData>>;
 
-export type AppEnvType = "prod" | "test" | "dev";
+// export type AppEnvType = "prod" | "test" | "dev" | string;
 
 export interface IAppConfigs<T = IAppConfig> {
     common?: Partial<T>,
@@ -73,26 +85,29 @@ export interface IStoreOption<T extends object> {
 /**
  * 项目可选配置
  */
-export interface IAppOption<T extends object = {}> {
+export interface IEnterConfig<T extends object = {}> {
+    node_env?: string;
     /**
      * 覆盖掉默认环境配置
      */
-    appEnv?: AppEnvType;
+    app_env?: string;
     /**
      * merge掉 privateConfig和publicConfig
      */
-    appConfig?: Partial<IAppConfig>;
+    app_config?: Partial<IAppConfig>;
     /**
      * 数据中心 - 配置项
      */
-    storeOpt?: IStoreOption<T>,
+    store_opts?: IStoreOption<T>,
     /**
      * domain改写
      */
-    appDomain?: string;
+    app_domain?: string;
 
     /**
      * 启动的时候干些事情
      */
     onInit?: () => void;
+
+    private_config?: IProjectConfig;
 }
