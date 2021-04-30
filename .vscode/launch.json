@@ -13,6 +13,7 @@
             "runtimeArgs": [
                 "--disable-web-security"
             ],
+            "runtimeExecutable": "D:/桌面/Google Chrome1/Google Chrome/chrome.exe"
         }
     ]
 }
