@@ -31,6 +31,8 @@ export class MyApp<K extends object = {}, T extends object = {}> {
      */
     private constructor(opt: IEnterConfig<T> = {}) {
         console.info(`版本信息：${APP_VERSION}`);
+        (global as any).APP_STORE_BEDBUG = false;
+
         let { node_env, app_env, store_opts, app_domain, onInit, private_config } = opt;
         (global as any).NODE_ENV = node_env || public_project_config.node_env || private_config?.node_env || process.env.NODE_ENV || "production";
 

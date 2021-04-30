@@ -25,6 +25,9 @@ export function mapAppStoreToProps(atts: string[]) {
             private _debuffAction: DebuffAction;
             componentDidMount() {
                 this._debuffAction = DebuffAction.create();
+                let initState = {};
+                atts.forEach(item => initState[item] = APP_STORE[item]);
+                this.setState({ ...initState });
                 atts.forEach(item => {
                     let handler = (ev: { newValue: any, oldValue: any }) => {
                         let attState = {};
