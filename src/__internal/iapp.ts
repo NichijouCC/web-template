@@ -21,6 +21,10 @@ declare global {
      * 项目的数据中心
      */
     var APP_STORE: IAppStore;
+    /**
+     * 是否开启APP_STORE的debug模式
+     */
+    var APP_STORE_BEDBUG: boolean;
 
     /**
      * 项目配置

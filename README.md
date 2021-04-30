@@ -54,7 +54,7 @@ MyApp.start(<APP />,{
 ```
 
 ### 3.浅框架-数据中心（APP_STORE）管理
-APP_STORE提供功能包含:a. 全局共享数据管理 b.事件通信中心 c.数据存储。基于以上衍生的功能：状态管理(类似redux，mobx)  
+APP_STORE提供功能包含:a. 全局共享数据管理 b.事件通信中心 c.数据存储 d.同源界面共享store。基于以上衍生的功能：状态管理(类似redux，mobx)  
 
 - 数据中心在业务中使用：
 > 1. 在 src-> config->customStore.ts 中设置 项目数据中心需要的数据，需要关闭再打开或刷新依旧存在的数据需要通过@att标注
