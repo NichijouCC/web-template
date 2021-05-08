@@ -60,10 +60,12 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
             this.on("attChange" as any, (ev: any) => {
                 let { att, newValue } = ev;
                 storage.setItem(att, JSON.stringify(newValue));
-
-                if (this.hasMarkedAtt(att)) this.saveMarkedData();
             })
         }
+
+        this.on("attChange" as any, (ev: any) => {
+            if (this.hasMarkedAtt(ev.att)) this.saveMarkedData();
+        })
     }
 
     static create<P extends object = {}>(opt?: IStoreOption<P>): AppStore<IStoreEvents<P>> & P {
@@ -90,7 +92,7 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
 
     private hasMarkedAtt(key: string) {
         let storeAtts: Set<string> = this._target.constructor[STORE_MARK_KEY];
-        return storeAtts.has(key);
+        return storeAtts?.has(key) ?? false;
     }
 
     private saveMarkedData() {

@@ -4,7 +4,6 @@ const config = require("./config");
 
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
@@ -27,34 +26,37 @@ module.exports = {
                     },
                     {
                         test: /\.(less|css)$/,
-                        use: ["style-loader", "css-loader",
-                            {
-                                loader: "less-loader",
-                                options: {
-                                    lessOptions: {
-                                        javascriptEnabled: true,
-                                    }
+                        use: [MiniCssExtractPlugin.loader, "css-loader",
+                        {
+                            loader: "less-loader",
+                            options: {
+                                lessOptions: {
+                                    javascriptEnabled: true,
                                 }
-                            }]
+                            }
+                        }]
                     },
                     {
                         test: /\.(svg|jpg|jpeg|bmp|png|webp|gif|ico|ttf)$/,
-                        loader: 'url-loader',
-                        options: {
-                            limit: 8 * 1024,
-                            name: 'static/img/[name].[contenthash:8].[ext]'
-                        }
+                        type: 'asset/resource',
+                        parser: {
+                            dataUrlCondition: {
+                                maxSize: 8 * 1024,
+                            },
+                        },
+                        generator: {
+                            filename: 'images/[name].[contenthash:8].[ext]',
+                        },
                     },
                     {
-                        loader: 'file-loader',
+                        type: 'asset/resource',
                         exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
-                        options: {
-                            name: 'static/media/[name].[contenthash:8].[ext]',
+                        generator: {
+                            filename: 'resources/[name].[contenthash:8].[ext]',
                         },
                     }
                 ]
             }
-
         ]
     },
     plugins: [
@@ -90,9 +92,6 @@ module.exports = {
         },
         runtimeChunk: true,
         minimizer: [
-            new OptimizeCSSAssetsPlugin({
-                cssProcessorOptions: { map: { inline: false } }
-            }),
             new TerserPlugin({
                 cache: true,
                 parallel: true,

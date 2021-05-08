@@ -27,7 +27,7 @@ module.exports = {
                         test: /\.(j|t)sx?$/,
                         include: config.appPath,
                         exclude: config.node_modules_path,
-                        use: ["thread-loader", "cache-loader", "babel-loader"],
+                        use: ["thread-loader", "babel-loader"],
                     },
                     {
                         test: /\.(less|css)$/,
@@ -43,16 +43,16 @@ module.exports = {
                     },
                     {
                         test: /\.(svg|jpg|jpeg|bmp|png|webp|gif|ico|ttf)$/,
-                        loader: 'url-loader',
-                        options: {
-                            name: 'img/[name].[hash:8].[ext]',
-                        }
+                        type: 'asset/resource',
+                        generator: {
+                            filename: 'images/[name].[hash:8].[ext]',
+                        },
                     },
                     {
-                        loader: 'file-loader',
+                        type: 'asset/resource',
                         exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
-                        options: {
-                            name: 'media/[name].[hash:8].[ext]',
+                        generator: {
+                            filename: 'resources/[name].[hash:8].[ext]',
                         },
                     }
                 ]
