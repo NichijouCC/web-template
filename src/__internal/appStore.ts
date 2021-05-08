@@ -16,7 +16,7 @@ const LOAD = Symbol("load");
  * localStorage中的key字段
  */
 const STORE_MARKED_DATA = Symbol("__appStore:marked_data");
-const STORE_MARK_KEY = Symbol("__appStore:marked_key");
+// const STORE_MARK_KEY = Symbol("__appStore:marked_key");
 
 /**
  * 全局数据中心
@@ -26,25 +26,31 @@ const STORE_MARK_KEY = Symbol("__appStore:marked_key");
  */
 export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
     private _target: WebStore;
-    // private _proxyTarget: object;
     private constructor(opt: IStoreOption<any> = {}) {
         super();
         let { target, initData, saveItemToStorage = "none" } = opt;
         if (target == null) {
-            if (_store_target == null) {
+            if (AppStore._storeTarget == null) {
                 throw new Error(`if storeOpt.target == null, @MyStore must be use and "src/config/customStore" be import in index.tsx`);
             } else {
-                target = new _store_target();
+                target = new AppStore._storeTarget();
             }
         }
-        for (let key in initData) {
-            target[key] = initData[key];
-        }
-        if (opt?.loadDataOnOpen != false) {
-            this.loadMarkedData();
+        if (opt?.loadDataOnOpen != false) {//mark的数据
+            let markedData = localStorage.getItem(STORE_MARKED_DATA.toString());
+            if (markedData != null) {
+                let storageData = JSON.parse(markedData);
+                for (const key in storageData) {
+                    target[key] = storageData[key];
+                }
+            }
         }
 
-        let privateStore = new WebStore(target);
+        for (let key in initData) {//启动项输入的数据
+            target[key] = initData[key];
+        }
+
+        let privateStore = new WebStore(target);//storage中共享的数据
         this._target = privateStore;
 
         privateStore.on("webStore:set", (ev) => {
@@ -91,12 +97,11 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
     }
 
     private hasMarkedAtt(key: string) {
-        let storeAtts: Set<string> = this._target.constructor[STORE_MARK_KEY];
-        return storeAtts?.has(key) ?? false;
+        return AppStore._markedAtts.has(key);
     }
 
     private saveMarkedData() {
-        let storeAtts: Set<string> = this._target.constructor[STORE_MARK_KEY];
+        let storeAtts: Set<string> = AppStore._markedAtts;
         let result = {};
         storeAtts.forEach(item => {
             result[item] = this._target.getItem(item);
@@ -130,20 +135,16 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
             localStorage.removeItem(STORE_MARKED_DATA.toString());
         }
     }
-}
 
-/**
- * 标记需要持久化的数据 
- */
-export function Att(target: any, name: string) {
-    let store: Set<string> = target.constructor[STORE_MARK_KEY];
-    if (store == null) {
-        store = target.constructor[STORE_MARK_KEY] = new Set<string>();
+    private static _markedAtts = new Set<string>();
+    /**
+     * 标记需要持久化的数据 
+     */
+    static Att(target: any, name: string) {
+        AppStore._markedAtts.add(name);
     }
-    store.add(name);
-}
-
-var _store_target: new () => any;
-export function MyStore(target: Function) {
-    _store_target = target as any;
+    private static _storeTarget: new () => any;
+    static MyStore(target: Function) {
+        AppStore._storeTarget = target as any;
+    }
 }

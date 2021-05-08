@@ -1,15 +1,18 @@
-import { Att, MyStore } from '../__internal';
+import { AppStore } from '../__internal';
 
 /**
  * APP_STORE 配置
  */
-@MyStore
+@AppStore.MyStore
 export class CustomStore {
     //-----------------------------------------------------
     //                  项目需要的共享数据定义在这里
     //----------------------------------------------------
-    @Att
+    @AppStore.Att
     authInfo: IAuthInfo;
+
+    @AppStore.Att
+    xxAtt: any;
 }
 
 /**
