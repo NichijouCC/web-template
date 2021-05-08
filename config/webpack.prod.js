@@ -27,34 +27,37 @@ module.exports = {
                     },
                     {
                         test: /\.(less|css)$/,
-                        use: ["style-loader", "css-loader",
-                            {
-                                loader: "less-loader",
-                                options: {
-                                    lessOptions: {
-                                        javascriptEnabled: true,
-                                    }
+                        use: [MiniCssExtractPlugin.loader, "css-loader",
+                        {
+                            loader: "less-loader",
+                            options: {
+                                lessOptions: {
+                                    javascriptEnabled: true,
                                 }
-                            }]
+                            }
+                        }]
                     },
                     {
                         test: /\.(svg|jpg|jpeg|bmp|png|webp|gif|ico|ttf)$/,
-                        loader: 'url-loader',
-                        options: {
-                            limit: 8 * 1024,
-                            name: 'static/img/[name].[contenthash:8].[ext]'
-                        }
+                        type: 'asset/resource',
+                        parser: {
+                            dataUrlCondition: {
+                                maxSize: 8 * 1024,
+                            },
+                        },
+                        generator: {
+                            filename: 'images/[name].[contenthash:8].[ext]',
+                        },
                     },
                     {
-                        loader: 'file-loader',
+                        type: 'asset/resource',
                         exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
-                        options: {
-                            name: 'static/media/[name].[contenthash:8].[ext]',
+                        generator: {
+                            filename: 'resources/[name].[contenthash:8].[ext]',
                         },
                     }
                 ]
             }
-
         ]
     },
     plugins: [

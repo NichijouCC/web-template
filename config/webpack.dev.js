@@ -12,6 +12,12 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         ...baseConfig.plugins,
     ],
+    cache: {
+        type: 'filesystem',
+        buildDependencies: {
+            config: [__filename],
+        },
+    },
     devServer: {
         host: '0.0.0.0',
         port: config.devServerPort,
