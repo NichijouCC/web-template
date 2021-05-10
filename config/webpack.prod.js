@@ -1,7 +1,9 @@
 const baseConfig = require('./webpack.base');
+const path = require('path');
 
 const config = require("./config");
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -11,7 +13,7 @@ module.exports = {
     mode: "production",
     output: {
         ...baseConfig.output,
-        filename: 'static/js/[name].[contenthash:8].js'
+        filename: 'static/js/[name]-[contenthash:8].js'
     },
     module: {
         ...baseConfig.module,
@@ -26,51 +28,70 @@ module.exports = {
                     },
                     {
                         test: /\.(less|css)$/,
-                        use: [MiniCssExtractPlugin.loader, "css-loader",
-                        {
-                            loader: "less-loader",
-                            options: {
-                                lessOptions: {
-                                    javascriptEnabled: true,
-                                }
+                        use: [
+                            {
+                                loader: MiniCssExtractPlugin.loader,
+                                options: {
+                                    publicPath: '../../',
+                                },
                             }
-                        }]
+                            , "css-loader", "less-loader"]
                     },
                     {
                         test: /\.(svg|jpg|jpeg|bmp|png|webp|gif|ico|ttf)$/,
-                        type: 'asset/resource',
+                        type: 'asset',
                         parser: {
                             dataUrlCondition: {
                                 maxSize: 8 * 1024,
                             },
                         },
                         generator: {
-                            filename: 'images/[name].[contenthash:8].[ext]',
-                        },
+                            filename: 'static/images/[name]-[contenthash:8][ext]',
+                        }
                     },
                     {
                         type: 'asset/resource',
                         exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
                         generator: {
-                            filename: 'resources/[name].[contenthash:8].[ext]',
-                        },
+                            filename: 'static/others/[name]-[contenthash:8][ext]',
+                        }
                     }
                 ]
             }
+
         ]
     },
     plugins: [
         ...baseConfig.plugins,
-        // gzip压缩
+        new HtmlWebpackPlugin({
+            template: config.indexHtmlPath,
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeOptionalTags: false,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                removeScriptTypeAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                removeAttributeQuotes: true,
+                removeCommentsFromCDATA: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+            }
+        }),
         new CompressionWebpackPlugin({
-            filename: '[path].gz[query]',
-            algorithm: 'gzip',
-            test: new RegExp('\\.(' + ['js', 'css'].join('|') + ')$'),
-            threshold: 10240, // 大于这个大小的文件才会被压缩
-            minRatio: 0.8
+            filename: "[path][base].gz",
+            algorithm: "gzip",
+            test: /\.js$|\.css$|\.html$/,
+            threshold: 10240,
+            minRatio: 0.8,
         }),
         new MiniCssExtractPlugin({
-            filename: "static/css/[name].[contenthash:8].css"
+            filename: 'static/css/[name]-[contenthash:8].css',
         }),
     ],
     optimization: {
@@ -90,14 +111,8 @@ module.exports = {
                 }
             },
         },
-        runtimeChunk: true,
-        minimizer: [
-            new TerserPlugin({
-                cache: true,
-                parallel: true,
-                sourceMap: false,
-            })
-        ]
+        minimize: true,
+        minimizer: [new TerserPlugin()]
     }
 }
 

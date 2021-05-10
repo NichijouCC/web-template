@@ -2,9 +2,9 @@ const path = require('path');
 const pkg = require("../package.json");
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 const config = require("./config");
 const { DefinePlugin } = require('webpack');
@@ -15,7 +15,7 @@ module.exports = {
         vendor: ['react', 'react-dom']
     },
     output: {
-        filename: 'js/[name].bundle.js',
+        filename: 'static/js/[name]-[hash:8].js',
         path: config.buildPath,
         publicPath: config.assetBasePath,
     },
@@ -43,21 +43,20 @@ module.exports = {
                     },
                     {
                         test: /\.(svg|jpg|jpeg|bmp|png|webp|gif|ico|ttf)$/,
-                        type: 'asset/resource',
+                        type: 'asset',
                         generator: {
-                            filename: 'images/[name].[hash:8].[ext]',
-                        },
+                            filename: 'static/images/[name]-[hash:8][ext]',
+                        }
                     },
                     {
                         type: 'asset/resource',
                         exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
                         generator: {
-                            filename: 'resources/[name].[hash:8].[ext]',
-                        },
+                            filename: 'static/others/[name]-[hash:8][ext]',
+                        }
                     }
                 ]
             }
-
         ]
     },
     resolve: {
@@ -65,7 +64,7 @@ module.exports = {
         plugins: [
             new TsconfigPathsPlugin({
                 extensions: [".ts", ".tsx", ".js"]
-            }),
+            })
         ]
     },
     plugins: [
@@ -74,35 +73,12 @@ module.exports = {
                 { from: 'public', globOptions: { ignore: ['index.html'] } },
             ]
         }),
-        new HtmlWebpackPlugin({
-            template: config.indexHtmlPath,
-            minify: {
-                removeComments: true,
-                collapseWhitespace: true,
-                removeRedundantAttributes: true,
-                useShortDoctype: true,
-                removeOptionalTags: false,
-                removeEmptyAttributes: true,
-                removeStyleLinkTypeAttributes: true,
-                removeScriptTypeAttributes: true,
-                removeStyleLinkTypeAttributes: true,
-                removeAttributeQuotes: true,
-                removeCommentsFromCDATA: true,
-                keepClosingSlash: true,
-                minifyJS: true,
-                minifyCSS: true,
-                minifyURLs: true,
-            }
-        }),
         new CleanWebpackPlugin(),
         new DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
             'process.env.APP_ENV': JSON.stringify(process.env.APP_ENV),
             APP_VERSION: JSON.stringify(`Version${pkg.version} - ${new Date().toUTCString()}`),
-        })
-    ],
-    cache: {
-        type: 'memory',
-    },
-    // profile: true
+        }),
+        new NodePolyfillPlugin()
+    ]
 }

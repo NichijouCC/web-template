@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const baseConfig = require('./webpack.base');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = require("./config");
 
@@ -10,13 +11,16 @@ module.exports = {
     devtool: "eval-source-map",
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
+        new HtmlWebpackPlugin({
+            template: config.indexHtmlPath
+        }),
         ...baseConfig.plugins,
     ],
     cache: {
-        type: 'filesystem',
+        type: "filesystem",
         buildDependencies: {
-            config: [__filename],
-        },
+            config: [__filename]
+        }
     },
     devServer: {
         host: '0.0.0.0',
