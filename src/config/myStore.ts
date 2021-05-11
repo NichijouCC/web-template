@@ -13,6 +13,15 @@ export class CustomStore {
 
     @AppStore.Att
     xxAtt: any;
+
+    confirmBox: {
+        beActive: boolean,
+        data?: {
+            title: string,
+            onOk?: () => void,
+            content?: React.ReactNode
+        }
+    } = { beActive: false, data: null };
 }
 
 /**
