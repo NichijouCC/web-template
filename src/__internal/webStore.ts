@@ -65,8 +65,8 @@ export class WebStore extends EventEmitter<{ "webStore:set": { prop: string, new
             set: (obj, prop, value) => {
                 let oldValue = obj[prop];
                 if (typeof prop == "symbol") throw new Error("APP_STORE not support symbol att");
-                this.emit("webStore:set", { prop, oldValue, newValue: value });
                 obj[prop] = value;
+                this.emit("webStore:set", { prop, oldValue, newValue: value });
                 return true;
             }
         });
@@ -98,7 +98,11 @@ export class WebStore extends EventEmitter<{ "webStore:set": { prop: string, new
         window.addEventListener('beforeunload', () => {
             let currentCount = this.addToRef(-1);
             if (currentCount <= 0) {
-                this.clear();
+                // this.clear();//unload的时候不触发“webStore:set” 事件，直接移除store数据；主动clear的时候才去触发数据修改事件
+                localStorage.removeItem(WebStore.privateStore);
+                localStorage.removeItem(WebStore.storeSetEvent);
+                localStorage.removeItem(WebStore.storeRemoveEvent);
+
                 localStorage.removeItem(WebStore.storeRefCount);
             }
         }, false);
