@@ -1,7 +1,7 @@
 import { debuglog } from "./util";
 import { EventEmitter, EventTarget } from "@mtgoo/ctool"
 /**
- * 可在同源界面同步的store
+ * 有事件的sessionStorage
  */
 export class WebStore extends EventEmitter<{ "webStore:set": { prop: string, newValue: any, oldValue: any } }> {
     private _data: any = {};
@@ -37,15 +37,15 @@ export class WebStore extends EventEmitter<{ "webStore:set": { prop: string, new
 
     get currentData() { return this._data }
     private addToRef = (count = 1) => {
-        let refStr = localStorage.getItem(WebStore.storeRefCount);
+        let refStr = sessionStorage.getItem(WebStore.storeRefCount);
         if (refStr == null) {
-            localStorage.setItem(WebStore.storeRefCount, count.toString());
+            sessionStorage.setItem(WebStore.storeRefCount, count.toString());
             debuglog(`【store】：change ref to ${count}`);
 
             return count;
         } else {
             let refCount: number = JSON.parse(refStr) + count;
-            localStorage.setItem(WebStore.storeRefCount, refCount.toString());
+            sessionStorage.setItem(WebStore.storeRefCount, refCount.toString());
             debuglog(`【store】：change ref to ${refCount}`);
             return refCount;
         }
@@ -90,7 +90,7 @@ export class WebStore extends EventEmitter<{ "webStore:set": { prop: string, new
                     let key = JSON.parse(ev.newValue);
                     this._data[key] = undefined;
                 } else if (ev.key == WebStore.storeRefCount) {
-                    debuglog(`【store】：refCount= ${localStorage.getItem(WebStore.storeRefCount)}`, ev);
+                    debuglog(`【store】：refCount= ${sessionStorage.getItem(WebStore.storeRefCount)}`, ev);
                 }
             }
         });
@@ -98,12 +98,10 @@ export class WebStore extends EventEmitter<{ "webStore:set": { prop: string, new
         window.addEventListener('beforeunload', () => {
             let currentCount = this.addToRef(-1);
             if (currentCount <= 0) {
-                // this.clear();//unload的时候不触发“webStore:set” 事件，直接移除store数据；主动clear的时候才去触发数据修改事件
-                localStorage.removeItem(WebStore.privateStore);
-                localStorage.removeItem(WebStore.storeSetEvent);
-                localStorage.removeItem(WebStore.storeRemoveEvent);
-
-                localStorage.removeItem(WebStore.storeRefCount);
+                sessionStorage.removeItem(WebStore.privateStore);
+                sessionStorage.removeItem(WebStore.storeSetEvent);
+                sessionStorage.removeItem(WebStore.storeRemoveEvent);
+                sessionStorage.removeItem(WebStore.storeRefCount);
             }
         }, false);
     }
