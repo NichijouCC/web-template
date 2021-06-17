@@ -77,10 +77,6 @@ export interface IStoreOption<T extends object> {
      */
     initData?: Partial<T>;
     /**
-     * 是否将数据存入Storage，默认：“none”
-     */
-    saveItemToStorage?: "localStorage" | "sessionStorage" | "none";
-    /**
      * 启动的时候加载上次的数据，默认：true
      */
     loadDataOnOpen?: boolean;

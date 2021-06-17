@@ -8,10 +8,10 @@ export class CustomStore {
     //-----------------------------------------------------
     //                  项目需要的共享数据定义在这里
     //----------------------------------------------------
-    @AppStore.Att
+    @AppStore.Serialize
     authInfo: IAuthInfo;
 
-    @AppStore.Att
+    @AppStore.Serialize
     xxAtt: any;
 
     confirmBox: {

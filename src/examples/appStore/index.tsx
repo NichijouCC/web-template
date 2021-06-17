@@ -21,6 +21,7 @@ MyApp.start(
             <ClassComp2 />
             <FuncComp />
             <FuncComp2 />
+            <button onClick={() => window.open(window.location.href)} >开新界面</button>
         </div >
     )
 );

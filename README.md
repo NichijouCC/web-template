@@ -79,8 +79,10 @@ Tip:
 ```
 
 3. 数据存储
-    loadDataOnOpen默认true,即会将存储的数据（@att标记的数据）在启动的时候赋值给store；
-    saveItemToStorage默认为none，配置为某storage即会将store的数据按照属性存到对应storage中
+    @Serialize标记需要持久化的数据（serialize的数据本身也是多页面共享的）；
+    @Share 标记需要通过多页面共享的数据
+    loadDataOnOpen默认true,即会将存储的数据（@Serialize标记的数据）在启动的时候赋值给store；
+
 ```
     MyApp.start(<APP />, {
         //store配置项（可选）
@@ -89,8 +91,6 @@ Tip:
             target?: T;
             //store初始化值;
             initData?: Partial<T>;
-            // 是否将数据存入Storage(可选："localStorage"、"sessionStorage"、"none")，默认：“none”
-            saveItemToStorage: "localStorage";
             // 启动的时候加载上次的数据，默认：true
             loadDataOnOpen: false;
         },

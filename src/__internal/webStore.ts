@@ -7,20 +7,23 @@ export class WebStore extends EventEmitter<{ "webStore:set": { prop: string, new
     private _data: any = {};
     private static privateStore = "__webStore:data";
     private static storeSetEvent = "__webStore:set";
+    private static req_storeGetEvent = "__webStore:get_request";
+    private static resp_storeGetEvent = "__webStore:get_response";
     private static storeRemoveEvent = "__webStore:remove";
     private static storeRefCount = "__webStore:refCount";
     setItem = (key: string, value: any) => {
         this._data[key] = value;
-        localStorage.setItem(WebStore.privateStore, JSON.stringify(this._data));
+        sessionStorage.setItem(WebStore.privateStore, JSON.stringify(this._data));
         WebStore.raiseEvent(WebStore.storeSetEvent, { key, value });
         debuglog(`【store】：set ${key} ${value}`);
     }
     getItem = (key: string) => {
         return this._data[key];
     }
+
     removeItem = (key: string) => {
         this._data[key] = undefined;
-        localStorage.setItem(WebStore.privateStore, JSON.stringify(this._data));
+        sessionStorage.setItem(WebStore.privateStore, JSON.stringify(this._data));
         WebStore.raiseEvent(WebStore.storeRemoveEvent, key);
         debuglog(`【store】：remove ${key}`);
     }
@@ -28,40 +31,18 @@ export class WebStore extends EventEmitter<{ "webStore:set": { prop: string, new
         for (const key in this._data) {
             this._data[key] = undefined;
         }
-        localStorage.removeItem(WebStore.privateStore);
-        localStorage.removeItem(WebStore.storeSetEvent);
-        localStorage.removeItem(WebStore.storeRemoveEvent);
+        sessionStorage.removeItem(WebStore.privateStore);
+        sessionStorage.removeItem(WebStore.storeSetEvent);
+        sessionStorage.removeItem(WebStore.storeRemoveEvent);
 
         debuglog(`【store】：clear`);
     }
 
     get currentData() { return this._data }
-    private addToRef = (count = 1) => {
-        let refStr = sessionStorage.getItem(WebStore.storeRefCount);
-        if (refStr == null) {
-            sessionStorage.setItem(WebStore.storeRefCount, count.toString());
-            debuglog(`【store】：change ref to ${count}`);
 
-            return count;
-        } else {
-            let refCount: number = JSON.parse(refStr) + count;
-            sessionStorage.setItem(WebStore.storeRefCount, refCount.toString());
-            debuglog(`【store】：change ref to ${refCount}`);
-            return refCount;
-        }
-    }
-
-    constructor(data = {}) {
+    constructor(initData = {}) {
         super();
-        let targetData = localStorage.getItem(WebStore.privateStore);
-        if (targetData != null) {
-            let initData = JSON.parse(targetData);
-            for (let key in initData) {
-                data[key] = initData[key];
-            }
-        }
-
-        this._data = new Proxy(data, {
+        this._data = new Proxy(initData, {
             set: (obj, prop, value) => {
                 let oldValue = obj[prop];
                 if (typeof prop == "symbol") throw new Error("APP_STORE not support symbol att");
@@ -79,7 +60,17 @@ export class WebStore extends EventEmitter<{ "webStore:set": { prop: string, new
                     this._data[key] = undefined;
                 }
             } else {
-                if (ev.key == WebStore.storeSetEvent && ev.newValue != null) {
+                if (ev.key == WebStore.req_storeGetEvent) {
+                    WebStore.raiseEvent(WebStore.resp_storeGetEvent, initData);
+                    debuglog(`【store】：其他界面请求store数据 ${ev.newValue}`, ev);
+                }
+                else if (ev.key == WebStore.resp_storeGetEvent) {
+                    let data = JSON.parse(ev.newValue);
+                    for (let key in data) {
+                        this._data[key] = data[key];
+                    }
+                }
+                else if (ev.key == WebStore.storeSetEvent && ev.newValue != null) {
                     let data = JSON.parse(ev.newValue);
                     debuglog(`【store】：其他界面set ${ev.newValue}`, ev);
                     if (data.key != null && data.value != null) {
@@ -89,21 +80,14 @@ export class WebStore extends EventEmitter<{ "webStore:set": { prop: string, new
                     debuglog(`【store】：其他界面remove ${ev.newValue}`, ev);
                     let key = JSON.parse(ev.newValue);
                     this._data[key] = undefined;
-                } else if (ev.key == WebStore.storeRefCount) {
-                    debuglog(`【store】：refCount= ${sessionStorage.getItem(WebStore.storeRefCount)}`, ev);
                 }
+                // else if (ev.key == WebStore.storeRefCount) {
+                //     debuglog(`【store】：refCount= ${sessionStorage.getItem(WebStore.storeRefCount)}`, ev);
+                // }
             }
         });
-        this.addToRef(1);
-        window.addEventListener('beforeunload', () => {
-            let currentCount = this.addToRef(-1);
-            if (currentCount <= 0) {
-                sessionStorage.removeItem(WebStore.privateStore);
-                sessionStorage.removeItem(WebStore.storeSetEvent);
-                sessionStorage.removeItem(WebStore.storeRemoveEvent);
-                sessionStorage.removeItem(WebStore.storeRefCount);
-            }
-        }, false);
+        WebStore.raiseEvent(WebStore.req_storeGetEvent, new Date().toLocaleString())
+
     }
     static raiseEvent(topic: string, data: any) {
         localStorage.setItem(topic, JSON.stringify(data));
