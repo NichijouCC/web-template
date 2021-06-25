@@ -1,41 +1,55 @@
 import { debuglog } from "./util";
-import { EventEmitter, EventTarget } from "@mtgoo/ctool"
+import { EventEmitter } from "@mtgoo/ctool"
+
+const Rpc = "store:rpc"
+enum RpcMethod {
+    REQ_GET_DATA = "req:get_store_data",
+    RESP_GET_DATA = "resp:get_store_data",
+    REQ_SET_ATT = "req:set_store_att",
+    REQ_REMOVE_ATT = "req:remove_store_att",
+    REQ_CLEAR = "req:clear_store",
+}
+
+interface IRpcMessage {
+    method: RpcMethod,
+    params?: any
+}
+
 /**
  * 有事件的sessionStorage
  */
 export class WebStore extends EventEmitter<{ "webStore:set": { prop: string, newValue: any, oldValue: any } }> {
     private _data: any = {};
     private static privateStore = "__webStore:data";
-    private static storeSetEvent = "__webStore:set";
-    private static req_storeGetEvent = "__webStore:get_request";
-    private static resp_storeGetEvent = "__webStore:get_response";
-    private static storeRemoveEvent = "__webStore:remove";
-    private static storeRefCount = "__webStore:refCount";
-    setItem = (key: string, value: any) => {
+    setItem = (key: string, value: any, notify: boolean = true) => {
+        debuglog(`【store】：set ${key} ${value} ${notify && "notify"}`);
         this._data[key] = value;
         sessionStorage.setItem(WebStore.privateStore, JSON.stringify(this._data));
-        WebStore.raiseEvent(WebStore.storeSetEvent, { key, value });
-        debuglog(`【store】：set ${key} ${value}`);
+        if (notify) {
+            WebStore.rpc({ method: RpcMethod.REQ_SET_ATT, params: { key, value } });
+        }
     }
     getItem = (key: string) => {
         return this._data[key];
     }
 
-    removeItem = (key: string) => {
+    removeItem = (key: string, notify: boolean = true) => {
+        debuglog(`【store】：remove ${key} ${notify && "notify"}`);
         this._data[key] = undefined;
         sessionStorage.setItem(WebStore.privateStore, JSON.stringify(this._data));
-        WebStore.raiseEvent(WebStore.storeRemoveEvent, key);
-        debuglog(`【store】：remove ${key}`);
+        if (notify) {
+            WebStore.rpc({ method: RpcMethod.REQ_REMOVE_ATT, params: key });
+        }
     }
-    clear = () => {
+    clear = (notify: boolean = true) => {
+        debuglog(`【store】：clear`);
         for (const key in this._data) {
             this._data[key] = undefined;
         }
         sessionStorage.removeItem(WebStore.privateStore);
-        sessionStorage.removeItem(WebStore.storeSetEvent);
-        sessionStorage.removeItem(WebStore.storeRemoveEvent);
-
-        debuglog(`【store】：clear`);
+        if (notify) {
+            WebStore.rpc({ method: RpcMethod.REQ_CLEAR });
+        }
     }
 
     get currentData() { return this._data }
@@ -53,44 +67,44 @@ export class WebStore extends EventEmitter<{ "webStore:set": { prop: string, new
         });
 
         window.addEventListener("storage", (ev) => {
-            if (ev.key == null && ev.newValue == null) {
-                debuglog(`【store】：其他界面clear data`, ev);
-                //clear
-                for (const key in this._data) {
-                    this._data[key] = undefined;
-                }
-            } else {
-                if (ev.key == WebStore.req_storeGetEvent) {
-                    WebStore.raiseEvent(WebStore.resp_storeGetEvent, initData);
-                    debuglog(`【store】：其他界面请求store数据 ${ev.newValue}`, ev);
-                }
-                else if (ev.key == WebStore.resp_storeGetEvent) {
-                    let data = JSON.parse(ev.newValue);
-                    for (let key in data) {
-                        this._data[key] = data[key];
+            if (ev.key == Rpc && ev.newValue != null) {
+                try {
+                    let message: IRpcMessage = JSON.parse(ev.newValue);
+                    let { method, params } = message || {};
+                    if (method == null) return;
+                    debuglog(`【收到RPC请求】：method- ${method} params- ${JSON.stringify(params)}`, ev);
+
+                    if (method == RpcMethod.REQ_GET_DATA) {
+                        WebStore.rpc({ method: RpcMethod.RESP_GET_DATA, params: initData });
+                    }
+                    else if (method == RpcMethod.RESP_GET_DATA) {
+                        for (let key in params) {
+                            this._data[key] = params[key];
+                        }
+                    }
+                    else if (method == RpcMethod.REQ_SET_ATT) {
+                        this.setItem(params.key, params.value, false);
+                    }
+                    else if (method == RpcMethod.REQ_REMOVE_ATT) {
+                        this.setItem(params, undefined, false);
+                    }
+                    else if (method == RpcMethod.REQ_CLEAR) {
+                        for (const key in this._data) {
+                            this.setItem(key, undefined, false);
+                        }
                     }
                 }
-                else if (ev.key == WebStore.storeSetEvent && ev.newValue != null) {
-                    let data = JSON.parse(ev.newValue);
-                    debuglog(`【store】：其他界面set ${ev.newValue}`, ev);
-                    if (data.key != null && data.value != null) {
-                        this._data[data.key] = data.value;
-                    }
-                } else if (ev.key == WebStore.storeRemoveEvent && ev.newValue != null) {
-                    debuglog(`【store】：其他界面remove ${ev.newValue}`, ev);
-                    let key = JSON.parse(ev.newValue);
-                    this._data[key] = undefined;
+                catch (err) {
+                    console.error("store 通信出错");
                 }
-                // else if (ev.key == WebStore.storeRefCount) {
-                //     debuglog(`【store】：refCount= ${sessionStorage.getItem(WebStore.storeRefCount)}`, ev);
-                // }
             }
         });
-        WebStore.raiseEvent(WebStore.req_storeGetEvent, new Date().toLocaleString())
-
+        WebStore.rpc({ method: RpcMethod.REQ_GET_DATA })
     }
-    static raiseEvent(topic: string, data: any) {
-        localStorage.setItem(topic, JSON.stringify(data));
-        localStorage.removeItem(topic);
+
+    private static rpc(message: IRpcMessage) {
+        debuglog(`发送 ${JSON.stringify(message)}`);
+        localStorage.setItem(Rpc, JSON.stringify(message));
+        localStorage.removeItem(Rpc);
     }
 }
