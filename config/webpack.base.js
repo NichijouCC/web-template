@@ -27,7 +27,7 @@ module.exports = {
                         test: /\.(j|t)sx?$/,
                         include: config.appPath,
                         exclude: config.node_modules_path,
-                        use: ["thread-loader", "babel-loader"],
+                        use: [ "babel-loader"],
                     },
                     {
                         test: /\.(less|css)$/,
@@ -50,7 +50,7 @@ module.exports = {
                     },
                     {
                         type: 'asset/resource',
-                        exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+                        exclude: [/(^|\.(svg|png|jpg|js|jsx|ts|tsx|html|json))$/],
                         generator: {
                             filename: 'static/others/[name]-[hash:8][ext]',
                         }

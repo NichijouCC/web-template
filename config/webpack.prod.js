@@ -31,9 +31,6 @@ module.exports = {
                         use: [
                             {
                                 loader: MiniCssExtractPlugin.loader,
-                                options: {
-                                    publicPath: '../../',
-                                },
                             }
                             , "css-loader", "less-loader"]
                     },
@@ -51,7 +48,7 @@ module.exports = {
                     },
                     {
                         type: 'asset/resource',
-                        exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+                        exclude: [/(^|\.(svg|png|jpg|js|jsx|ts|tsx|html|json))$/],
                         generator: {
                             filename: 'static/others/[name]-[contenthash:8][ext]',
                         }
@@ -111,7 +108,7 @@ module.exports = {
                 }
             },
         },
-        minimize: true,
+        // minimize: false,
         minimizer: [new TerserPlugin()]
     }
 }
