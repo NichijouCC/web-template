@@ -16,7 +16,7 @@ export function initAxiosConfig() {
     axios.interceptors.response.use(
         response => {
             let data = response.data as ICustomResponse;
-            if ((data.code == 200 || 2000) || data.code == null) {
+            if (data.code == 200 || data.code == 2000 || data.code == null) {
                 return data as any;
             } else {
                 //-----------------------------------------------------------
