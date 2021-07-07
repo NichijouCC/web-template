@@ -1,6 +1,6 @@
 import { DebuffAction } from "@mtgoo/ctool";
 import React from "react";
-import { mapAppStoreToProps } from "../../__internal";
+import { mapAppStoreToProps } from "../../__internal/index";
 /**
  * 在class组件中使用APP_STORE, 将APP_STORE的数据作为组件state使用
  */

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
-import { useAppStore } from '../__internal';
+import { useAppStore } from '../__internal/index';
 
 /**
  * 路由验证token，跳转登录页面

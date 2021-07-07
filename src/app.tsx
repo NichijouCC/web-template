@@ -5,6 +5,10 @@ export class APP extends React.Component {
     }
 
     render() {
-        return <div>web 项目模板</div>;
+        return <div>web s</div>;
     }
+}
+
+export function aa(){
+    console.log("tree shake test");
 }

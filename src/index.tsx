@@ -1,7 +1,7 @@
 import React from "react";
 import { APP } from "./app";
 import { initAxiosConfig } from "./extends/axios";
-import { MyApp } from "./__internal";
+import { MyApp } from "./__internal/index";
 /**
  * ** 如果使用CustomStore, 这句别删 **
  */

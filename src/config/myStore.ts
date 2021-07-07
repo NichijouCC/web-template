@@ -1,4 +1,4 @@
-import { AppStore } from '../__internal';
+import { AppStore } from '../__internal/index';
 
 /**
  * APP_STORE 配置

@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { IAppStore, useAppStore } from "../../__internal";
+import { IAppStore, useAppStore } from "../../__internal/index";
 
 /**
  * 在function组件中使用APP_STORE, 将APP_STORE的数据作为组件state使用

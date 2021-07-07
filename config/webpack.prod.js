@@ -23,7 +23,7 @@ module.exports = {
                     {
                         test: /\.(j|t)sx?$/,
                         include: config.appPath,
-                        exclude: config.node_modules_path,
+                        // exclude: config.node_modules_path,
                         use: "babel-loader",
                     },
                     {
@@ -92,24 +92,25 @@ module.exports = {
         }),
     ],
     optimization: {
-        splitChunks: {
-            chunks: 'all',
-            minChunks: 2,
-            maxInitialRequests: 5,
-            cacheGroups: {
-                // 提取公共模块
-                commons: {
-                    chunks: 'all',
-                    test: /[\\/]node_modules[\\/]/,
-                    minChunks: 2,
-                    maxInitialRequests: 5,
-                    minSize: 0,
-                    name: 'common'
-                }
-            },
-        },
-        // minimize: false,
-        minimizer: [new TerserPlugin()]
+        // splitChunks: {
+        //     chunks: 'all',
+        //     minChunks: 2,
+        //     maxInitialRequests: 5,
+        //     cacheGroups: {
+        //         // 提取公共模块
+        //         commons: {
+        //             chunks: 'all',
+        //             test: /[\\/]node_modules[\\/]/,
+        //             minChunks: 2,
+        //             maxInitialRequests: 5,
+        //             minSize: 0,
+        //             name: 'common'
+        //         }
+        //     },
+        // },
+        usedExports: true,
+        minimize: true,
+        // minimizer: [new TerserPlugin()]
     }
 }
 
