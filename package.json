@@ -5,7 +5,6 @@
   "repository": "https://github.com/NichijouCC/web_template.git",
   "author": "dongbo <895188445@qq.com>",
   "license": "MIT",
-  "sidEffects":false,
   "devDependencies": {
     "@babel/core": "^7.7.2",
     "@babel/plugin-proposal-class-properties": "^7.7.0",
@@ -52,7 +51,7 @@
     "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
-    "@mtgoo/ctool": "0.0.21",
+    "@mtgoo/ctool": "0.0.23",
     "antd": "^4.15.5",
     "axios": "^0.21.0",
     "react": "^17.0.2",
