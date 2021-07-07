@@ -108,7 +108,7 @@ module.exports = {
                 }
             },
         },
-        // minimize: false,
+        minimize: true,
         minimizer: [new TerserPlugin()]
     }
 }

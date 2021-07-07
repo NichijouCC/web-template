@@ -1,6 +1,6 @@
 import React from "react";
 import { LazyComp } from "../../comps/lazyComp";
-import { MyApp } from "../../__internal";
+import { MyApp } from "../../__internal/index";
 import '@/config/myStore';
 
 function PlayWithLazyComp() {

@@ -1,5 +1,5 @@
 import React from "react";
-import { MyApp } from "../../__internal";
+import { MyApp } from "../../__internal/index";
 import '@/config/myStore';
 import { App } from "./app";
 import 'antd/dist/antd.css';

@@ -2,6 +2,10 @@ module.exports = api => {
     api.cache(true);
     return {
         "presets": [
+            "@babel/react",
+            ['@babel/typescript', {
+                allowNamespaces: true
+            }],
             [
                 "@babel/env",
                 process.env.NODE_ENV == "development" ? {
@@ -15,13 +19,10 @@ module.exports = api => {
                     "useBuiltIns": "usage",
                     "targets": {
                         "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
-                    }
+                    },
+                    "modules": false,
                 }
             ],
-            "@babel/react",
-            ['@babel/typescript', {
-                allowNamespaces: true
-            }],
         ],
         "plugins": [
             [

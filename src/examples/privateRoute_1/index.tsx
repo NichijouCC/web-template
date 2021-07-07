@@ -3,7 +3,7 @@ import { HashRouter as Router, Redirect, Route } from 'react-router-dom'
 import Page1 from "./page1";
 import Page2 from "./page2";
 import { PrivateRoute } from "../../comps/privateRoute";
-import { MyApp } from "../../__internal";
+import { MyApp } from "../../__internal/index";
 import '@/config/myStore';
 
 import Page3 from "./page3";

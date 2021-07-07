@@ -12,13 +12,13 @@ const { DefinePlugin } = require('webpack');
 module.exports = {
     entry: {
         app: path.resolve(config.appPath, "index.tsx"),
-        vendor: ['react', 'react-dom']
     },
     output: {
         filename: 'static/js/[name]-[hash:8].js',
         path: config.buildPath,
         publicPath: config.assetBasePath,
     },
+    target:"web",
     module: {
         rules: [
             {

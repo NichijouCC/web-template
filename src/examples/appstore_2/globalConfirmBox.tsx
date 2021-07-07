@@ -1,6 +1,6 @@
+import { useAppStore } from "@/__internal/index";
 import { Modal } from "antd";
 import React from "react";
-import { useAppStore } from "../../__internal";
 
 export function GlobalConfirmBox() {
     let confirm = useAppStore("confirmBox");

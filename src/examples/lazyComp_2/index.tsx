@@ -1,7 +1,7 @@
 import React from "react";
 import { LazyComp } from "../../comps/lazyComp";
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom'
-import { MyApp } from "../../__internal";
+import { MyApp } from "../../__internal/index";
 import '@/config/myStore';
 
 

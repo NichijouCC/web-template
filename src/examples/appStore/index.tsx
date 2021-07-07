@@ -1,5 +1,5 @@
 import React from "react";
-import { MyApp } from "../../__internal";
+import { MyApp } from "../../__internal/index";
 import { ClassComp, ClassComp2 } from "./classComp";
 import { FuncComp, FuncComp2 } from "./funcComp";
 import { UpdateStore } from "./updateStore";
