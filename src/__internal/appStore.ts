@@ -26,8 +26,9 @@ const STORE_SERIALIZE_DATA = Symbol("__appStore:marked_data");
  * 需要用sessionStorage共享的数据 使用share 进行标记
  */
 export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
+    private _shareStoreKeys = new Set<string>();
     private _shareData: WebStore;
-    private _privateStoreTarget: object;
+    private _target: object;
     private _privateStore: object;
     private constructor(opt: IStoreOption<any> = {}) {
         super();
@@ -51,21 +52,15 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
         for (let key in initData) {//启动项输入的数据
             target[key] = initData[key];
         }
-
-
-        let sharedTarget = {};
-        let privateTarget = {};
+        this._target = target;
         for (let key in target) {
             if (this.hasSerializeMarkedAtt(key) || this.hasSharedAtt(key)) {
-                sharedTarget[key] = target[key];
-            } else {
-                privateTarget[key] = target[key];
+                this._shareStoreKeys.add(key);
             }
         }
 
-        //---------------------------------share store
-        this._privateStoreTarget = privateTarget;
-        this._privateStore = new Proxy(privateTarget, {
+        //---------------------------------private store
+        this._privateStore = new Proxy(target, {
             set: (obj, prop, value) => {
                 let oldValue = obj[prop];
                 if (typeof prop == "symbol") throw new Error("APP_STORE not support symbol att");
@@ -78,7 +73,7 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
         });
 
         //---------------------------------share store
-        let shareStore = new WebStore(sharedTarget);//storage中共享的数据
+        let shareStore = new WebStore(target);//storage中共享的数据
         this._shareData = shareStore;
         shareStore.on("webStore:set", (ev) => {
             this.emit("attChange" as any, { att: ev.prop, newValue: ev.newValue, oldValue: ev.oldValue } as any);
@@ -96,7 +91,7 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
         let store = new AppStore<IStoreEvents<P>>(opt);
         let storedData = new Proxy(store, {
             set: function (obj, prop, value) {
-                if (store.hasSerializeMarkedAtt(prop as any) || store.hasSharedAtt(prop as any)) {
+                if (store._shareStoreKeys.has(prop as string)) {
                     obj._shareData.setItem(prop as any, value);
                 } else {
                     obj._privateStore[prop] = value;
@@ -104,7 +99,7 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
                 return true;
             },
             get: function (obj, prop) {
-                return obj[prop] ?? obj._privateStore[prop] ?? obj._shareData.getItem(prop as any)
+                return obj[prop] ?? store._target[prop]
             }
         });
         return storedData as any;

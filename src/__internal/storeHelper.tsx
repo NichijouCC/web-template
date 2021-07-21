@@ -24,7 +24,6 @@ export function mapAppStoreToProps(atts: string[]) {
         return class extends React.Component {
             private _debuffAction: DebuffAction;
             componentDidMount() {
-                console.log("sedasdas")
                 this._debuffAction = DebuffAction.create();
                 let initState = {};
                 atts.forEach(item => initState[item] = APP_STORE[item]);
