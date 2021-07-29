@@ -14,11 +14,11 @@ module.exports = {
         app: path.resolve(config.appPath, "index.tsx"),
     },
     output: {
-        filename: 'static/js/[name]-[hash:8].js',
+        filename: 'static/js/[name]-[fullhash:8].js',
         path: config.buildPath,
         publicPath: config.assetBasePath,
     },
-    target:"web",
+    target: "web",
     module: {
         rules: [
             {
@@ -27,7 +27,7 @@ module.exports = {
                         test: /\.(j|t)sx?$/,
                         include: config.appPath,
                         exclude: config.node_modules_path,
-                        use: [ "babel-loader"],
+                        use: ["babel-loader"],
                     },
                     {
                         test: /\.(less|css)$/,
@@ -45,14 +45,14 @@ module.exports = {
                         test: /\.(svg|jpg|jpeg|bmp|png|webp|gif|ico|ttf)$/,
                         type: 'asset',
                         generator: {
-                            filename: 'static/images/[name]-[hash:8][ext]',
+                            filename: 'static/images/[name]-[fullhash:8][ext]',
                         }
                     },
                     {
                         type: 'asset/resource',
                         exclude: [/(^|\.(svg|png|jpg|js|jsx|ts|tsx|html|json))$/],
                         generator: {
-                            filename: 'static/others/[name]-[hash:8][ext]',
+                            filename: 'static/others/[name]-[fullhash:8][ext]',
                         }
                     }
                 ]

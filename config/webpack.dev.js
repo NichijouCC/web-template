@@ -28,7 +28,7 @@ module.exports = {
         contentBase: path.join(__dirname, '../public'),
         watchContentBase: true,
         publicPath: '/',
-        compress: true,
+        compress: false,
         historyApiFallback: false,
         hot: true,
         clientLogLevel: 'error',

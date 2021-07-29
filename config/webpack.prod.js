@@ -31,6 +31,9 @@ module.exports = {
                         use: [
                             {
                                 loader: MiniCssExtractPlugin.loader,
+                                options: {
+                                    publicPath: '../../',
+                                },
                             }
                             , "css-loader", "less-loader"]
                     },
@@ -94,9 +97,19 @@ module.exports = {
     optimization: {
         splitChunks: {
             chunks: 'all',
-            minChunks: 2,
+            minChunks: 1,
             maxInitialRequests: 5,
             cacheGroups: {
+                //将大型包提取出来作为单独文件
+                vendor: {
+                    priority: 20,
+                    minSize: 400 * 1000,
+                    test: /[\\/]node_modules[\\/]/,
+                    name(module, chunks, cacheGroupKey) {
+                        const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+                        return `npm.${packageName.replace('@', '')}`;
+                    },
+                },
                 // 提取公共模块
                 commons: {
                     chunks: 'all',

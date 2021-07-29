@@ -53,7 +53,7 @@ function formate_webpack_config_with_cesium(webpackConfig, beProduction) {
  * 如果是 "dev+ 参数" 的格式则为执行某个样例
  */
 function runExampleFile() {
-    return process.argv[2] != null;
+    return process.argv[2] != null && process.argv[2].startsWith("-") == false;
 }
 
 /**
