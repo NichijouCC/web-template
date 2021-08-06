@@ -1,7 +1,7 @@
 import { Modal } from "antd";
 import React from "react";
-import { useAppStore } from "../../__internal/index";
-import { GlobalConfirmBox } from "./globalConfirmBox";
+import { useAppStore } from "@/__internal/index";
+import { GlobalConfirmBox } from "@/comps/globalConfirmBox";
 import { PageComp1 } from "./pageComp1";
 import { PageComp2 } from "./pageComp2";
 

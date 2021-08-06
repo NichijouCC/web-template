@@ -148,6 +148,8 @@ Tip:
 > 6. examples->lazyComp_1：【公共组件】演示lazyComp基本使用
 > 7. examples->lazyComp_2：【业务向】演示lazyComp配合路由做页面bundle分割
 > 8. examples->privateRoute_1：【公共组件】演示privateRoute做界面权限检查跳转
+> 9. examples->router_2：【公共组件】演示侧边路由组件（MenuForRoute、RouteForMenu）
+> 10. examples->router_3：【业务向】演示侧边路由组件配合RBAC做界面权限控制
 
 ## 本项目快速使用流程
     1.项目初始化。
