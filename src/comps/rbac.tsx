@@ -1,5 +1,5 @@
 import { useAppStore } from "@/__internal";
-import React from "react";
+import React, { useMemo } from "react";
 
 /**
  * 人的角色分类
@@ -63,16 +63,34 @@ const RolePermissionConfig: Record<RoleEnum, number> = {} as any;
 }
 
 /**
- * 可以直接通过装饰器挂到组件类上，类似：WithRouter
+ * 通过装饰器挂到需要权限的组件类上，类似：WithRouter
  * @param needPermission 组件需要的权限 
  * @returns 
  */
 export function WithPermission(needPermission: PermissionEnum) {
     return (WrappedComponent) => {
-        return class extends React.Component {
+        return class extends React.Component<any, { role: RoleEnum }>{
+            private _dispose: () => void;
+            constructor(props) {
+                super(props)
+                this.state = {
+                    role: APP_STORE.role
+                };
+                let handler = (ev: { newValue: any, oldValue: any }) => {
+                    let attState = {};
+                    attState["role"] = ev.newValue;
+                    this.setState(attState);
+                };
+                APP_STORE.on("role", handler);
+                this._dispose = () => {
+                    APP_STORE.off("role", handler);
+                }
+            }
+            componentWillUnmount() {
+                this._dispose?.();
+            }
             render() {
-                let beAllowed = RoleEnum.hasPermission(APP_STORE.role, needPermission);
-                return beAllowed ? <WrappedComponent {...this.props} /> : null
+                return RoleEnum.hasPermission(this.state.role, needPermission) ? <WrappedComponent {...this.props} /> : null
             }
         }
     }
@@ -83,9 +101,22 @@ export function WithPermission(needPermission: PermissionEnum) {
  * @param props 
  * @returns 
  */
-export function WrapPermissionComp<P extends object = {}>(props: { needPermission: PermissionEnum, comp: React.ElementType<P> } & P) {
+export function WrapPermissionComp<P extends object = {}>(props: { needPermission: PermissionEnum, component: React.ElementType<P> } & P) {
     let role = useAppStore("role");
     let beAllowed = RoleEnum.hasPermission(role, props.needPermission);
-    let Comp = props.comp as any;
+    let Comp = props.component as any;
     return beAllowed ? <Comp {...props as any} /> : null
+}
+
+/**
+ * hooks需要权限的组件
+ * @param needPermission 
+ * @returns 
+ */
+export function usePermission(needPermission: PermissionEnum) {
+    let role = useAppStore("role");
+    let beAllowed = useMemo(() => {
+        return RoleEnum.hasPermission(role, needPermission)
+    }, [needPermission, role]);
+    return beAllowed;
 }

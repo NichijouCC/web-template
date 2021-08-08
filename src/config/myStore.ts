@@ -1,3 +1,4 @@
+import { RoleEnum } from '@/comps/rbac';
 import { AppStore } from '../__internal/index';
 
 /**
@@ -13,6 +14,8 @@ export class CustomStore {
 
     @AppStore.Serialize
     xxAtt: any;
+
+    role: RoleEnum;
 
     confirmBox: {
         beActive: boolean,

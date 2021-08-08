@@ -24,31 +24,14 @@ function CheckPermissionAndToken<T extends RouteProps = RouteProps, P = {}>({ co
         //[可选] 在这调用api检查token,token无限将authInfo置为null
     })
 
-    if (needPermission != null) {
-        if (RoleEnum.hasPermission(APP_STORE.role, needPermission)) {
-            if (needToken) {
-                if (authInfo?.token != null) {
-                    return <Comp {...rest} />
-                } else {
-                    return <Redirect to={{ pathname: '/login', state: { from: rest.location } }} />
-                }
-            } else {
-                return <Comp {...rest} />
-            }
-        } else {
-            return <Redirect to={{ pathname: '/login', state: { from: rest.location } }} />
-        }
-    } else {
-        if (needToken) {
-            if (authInfo?.token != null) {
-                return <Comp {...rest} />
-            } else {
-                return <Redirect to={{ pathname: '/login', state: { from: rest.location } }} />
-            }
-        } else {
-            return <Comp {...rest} />
-        }
+    if (needPermission != null && RoleEnum.hasPermission(APP_STORE.role, needPermission) == false) {
+        return <Redirect to={{ pathname: '/login', state: { from: rest.location } }} />
     }
+    if (needToken && authInfo?.token == null) {
+        return <Redirect to={{ pathname: '/login', state: { from: rest.location } }} />
+    }
+
+    return <Comp {...rest} />
 }
 
 /**

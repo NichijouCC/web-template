@@ -4,6 +4,8 @@ services:
     build: .
     container_name: web_template
     restart: always
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf
     expose: 
       - 80
     # ports: 

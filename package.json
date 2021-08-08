@@ -62,6 +62,7 @@
     "example": "cross-env NODE_ENV=development APP_ENV=dev node ./config/run.js",
     "start": "cross-env NODE_ENV=development APP_ENV=dev node ./config/run.js",
     "build": "cross-env NODE_ENV=production APP_ENV=prod node ./config/run.js",
+    "build:test": "cross-env NODE_ENV=production APP_ENV=test node ./config/run.js",
     "build:analyze": "cross-env NODE_ENV=production BUILD=analyze node ./config/run.js -- --env.addons=bundleanalyzer",
     "lint": "eslint --fix src/*.{tsx,js} --ignore-pattern node_modules/"
   }

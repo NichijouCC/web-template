@@ -81,6 +81,7 @@ Tip:
 3. 数据存储
     @Serialize标记需要持久化的数据（serialize的数据本身也是多页面共享的）；
     @Share 标记需要通过多页面共享的数据
+    未标记的数据是单页面的共享变量，不会多页面共享，也不会持久化。适合不能多页面共享的变量例如websocket client，或者不想多页面共享需要每个页面独一份的变量
     loadDataOnOpen默认true,即会将存储的数据（@Serialize标记的数据）在启动的时候赋值给store；
 
 ```
@@ -150,6 +151,7 @@ Tip:
 > 8. examples->privateRoute_1：【公共组件】演示privateRoute做界面权限检查跳转
 > 9. examples->router_2：【公共组件】演示侧边路由组件（MenuForRoute、RouteForMenu）
 > 10. examples->router_3：【业务向】演示侧边路由组件配合RBAC做界面权限控制
+> 11. examples->permissionComp_1：【公共组件】演示各种情景下的权限控制组件
 
 ## 本项目快速使用流程
     1.项目初始化。
@@ -221,9 +223,10 @@ webpack配置目标：
 ```
 指令:👉👉👉
 - ``yarn start`` 启动项目（开发环境）
-- ``yarn build`` 项目打包(生产环境)，``yarn build:test``项目打包(测试环境)
+- ``yarn build`` 项目打包(生产环境)，
+- ``yarn build:test``项目打包(测试环境)
 - ``build:analyze`` 项目打包分析
-- ``yarn choose [xx]`` 启动以【xx】开头且位于src/examples文件夹下的样例
+- ``yarn example [xx]`` 启动以【xx】开头且位于src/examples文件夹下的样例
 
 ### 4. 项目开发
 提供的APP_STORE、公共组件、可选拓展等玩具可好好玩耍.😀
