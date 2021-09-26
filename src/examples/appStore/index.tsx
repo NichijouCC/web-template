@@ -4,6 +4,7 @@ import { ClassComp, ClassComp2 } from "./classComp";
 import { FuncComp, FuncComp2 } from "./funcComp";
 import { UpdateStore } from "./updateStore";
 import '@/config/myStore';
+import { FuncComp3 } from "./funcComp3";
 
 /**
  * APP_STORE使用演示
@@ -21,6 +22,7 @@ MyApp.start(
             <ClassComp2 />
             <FuncComp />
             <FuncComp2 />
+            <FuncComp3 />
             <button onClick={() => window.open(window.location.href)} >开新界面</button>
         </div >
     )

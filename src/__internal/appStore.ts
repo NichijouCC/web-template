@@ -1,6 +1,6 @@
 import { EventEmitter } from "@mtgoo/ctool";
 import { IStoreOption } from "./iapp";
-import { WebStore } from "./webStore";
+import { debuglog } from "./util";
 
 interface IPrivateEvents {
     attChange: { att: string, newValue: any, oldValue: any }
@@ -16,20 +16,29 @@ const LOAD = Symbol("load");
  * localStorage中的key字段
  */
 const STORE_SERIALIZE_DATA = Symbol("__appStore:marked_data");
-// const STORE_MARK_KEY = Symbol("__appStore:marked_key");
+
+const Rpc = "store:rpc"
+enum RpcMethod {
+    REQ_GET_DATA = "req:get_store_data",
+    RESP_GET_DATA = "resp:get_store_data",
+    REQ_SET_ATT = "req:set_store_att",
+}
+
+interface IRpcMessage {
+    method: RpcMethod,
+    params?: any
+}
+
 
 /**
  * 全局数据中心
  * 
  * @description
  * 需要被持久化的数据(存储到localStorage)使用 serialize 进行标记
- * 需要用sessionStorage共享的数据 使用share 进行标记
+ * 需要被多页面共享的数据 使用share 进行标记
  */
 export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
-    private _shareStoreKeys = new Set<string>();
-    private _shareData: WebStore;
     private _target: object;
-    private _privateStore: object;
     private constructor(opt: IStoreOption<any> = {}) {
         super();
         let { target, initData } = opt;
@@ -40,6 +49,10 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
                 target = new AppStore._storeTarget();
             }
         }
+        for (let key in initData) {//启动项输入的数据
+            target[key] = initData[key];
+        }
+
         if (opt?.loadDataOnOpen != false) {//mark的数据
             let markedData = localStorage.getItem(STORE_SERIALIZE_DATA.toString());
             if (markedData != null) {
@@ -49,73 +62,92 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
                 }
             }
         }
-        for (let key in initData) {//启动项输入的数据
-            target[key] = initData[key];
-        }
         this._target = target;
-        for (let key in target) {
-            if (this.hasSerializeMarkedAtt(key) || this.hasSharedAtt(key)) {
-                this._shareStoreKeys.add(key);
+
+        window.addEventListener("storage", (ev) => {
+            if (ev.key == Rpc && ev.newValue != null) {
+                try {
+                    let message: IRpcMessage = JSON.parse(ev.newValue);
+                    let { method, params } = message || {};
+                    if (method == null) return;
+                    debuglog(`【收到RPC请求】：method- ${method} params- ${JSON.stringify(params)}`, ev);
+
+                    if (method == RpcMethod.REQ_GET_DATA) {
+                        this.rpc({ method: RpcMethod.RESP_GET_DATA, params: this.sharedData });
+                    }
+                    else if (method == RpcMethod.RESP_GET_DATA) {
+                        for (let key in params) {
+                            this.set(key, params[key], true);
+                        }
+                    }
+                    else if (method == RpcMethod.REQ_SET_ATT) {
+                        this.set(params.key, params.value, true);
+                    }
+                }
+                catch (err) {
+                    console.error("store 通信出错");
+                }
+            }
+        });
+        this.rpc({ method: RpcMethod.REQ_GET_DATA });
+        this.saveStoreMarkedData();
+    }
+
+    private get sharedData() {
+        let shareData = {};
+        for (let key in this._target) {
+            if (this.checkBeSharedKey(key)) {
+                shareData[key] = this._target[key];
             }
         }
+        return shareData;
+    }
 
-        //---------------------------------private store
-        this._privateStore = new Proxy(target, {
-            set: (obj, prop, value) => {
-                let oldValue = obj[prop];
-                if (typeof prop == "symbol") throw new Error("APP_STORE not support symbol att");
-                obj[prop] = value;
+    private set(key: string, newValue: any, beRpc: boolean = false) {
+        let oldValue = this._target[key];
+        this.emit("attChange" as any, { att: key, newValue, oldValue } as any);
+        this.emit(key as any, { newValue, oldValue } as any);
+        this._target[key] = newValue;
+        if (this.checkBeStoredKey(key)) {
+            this.saveStoreMarkedData();
+        }
 
-                this.emit("attChange" as any, { att: prop, newValue: value, oldValue } as any);
-                this.emit(prop as any, { newValue: value, oldValue } as any);
-                return true;
-            }
-        });
+        if (beRpc == false && this.checkBeSharedKey(key)) {
+            this.rpc({ method: RpcMethod.REQ_SET_ATT, params: { key, value: newValue } });
+        }
+    }
 
-        //---------------------------------share store
-        let shareStore = new WebStore(target);//storage中共享的数据
-        this._shareData = shareStore;
-        shareStore.on("webStore:set", (ev) => {
-            this.emit("attChange" as any, { att: ev.prop, newValue: ev.newValue, oldValue: ev.oldValue } as any);
-            this.emit(ev.prop as any, { newValue: ev.newValue, oldValue: ev.oldValue } as any);
-
-            if (this.hasSerializeMarkedAtt(ev.prop)) {
-                this.saveMarkedData();
-            }
-        });
-
-        this.saveMarkedData();
+    private rpc(message: IRpcMessage) {
+        debuglog(`发送 ${JSON.stringify(message)}`);
+        localStorage.setItem(Rpc, JSON.stringify(message));
+        localStorage.removeItem(Rpc);
     }
 
     static create<P extends object = {}>(opt?: IStoreOption<P>): AppStore<IStoreEvents<P>> & P {
         let store = new AppStore<IStoreEvents<P>>(opt);
         let storedData = new Proxy(store, {
             set: function (obj, prop, value) {
-                if (store._shareStoreKeys.has(prop as string)) {
-                    obj._shareData.setItem(prop as any, value);
-                } else {
-                    obj._privateStore[prop] = value;
-                };
+                obj.set(prop as string, value)
                 return true;
             },
             get: function (obj, prop) {
-                return obj[prop] ?? store._target[prop]
+                return obj[prop] ?? obj._target[prop]
             }
         });
         return storedData as any;
     }
 
-    private hasSerializeMarkedAtt(key: string) {
+    private checkBeStoredKey(key: string) {
         return AppStore._serializedAtts.has(key);
     }
-    private hasSharedAtt(key: string) {
+    private checkBeSharedKey(key: string) {
         return AppStore._sharedAtts.has(key);
     }
-    private saveMarkedData() {
+    private saveStoreMarkedData() {
         let storeAtts: Set<string> = AppStore._serializedAtts;
         let result = {};
         storeAtts.forEach(item => {
-            result[item] = this._shareData.getItem(item);
+            result[item] = this._target[item];
         });
         localStorage.setItem(STORE_SERIALIZE_DATA.toString(), JSON.stringify(result))
     }
@@ -125,13 +157,13 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
         if (markedData != null) {
             let storageData = JSON.parse(markedData);
             for (const key in storageData) {
-                this._shareData.setItem(key, storageData[key]);
+                this.set(key, storageData[key]);
             }
         }
     }
 
     [SAVE]() {
-        this.saveMarkedData();
+        this.saveStoreMarkedData();
     }
 
     [LOAD]() {
@@ -141,11 +173,9 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
      * 清空store的数据
      */
     clear(clearStorage: boolean = true) {
-        this._shareData.clear();
-        for (let key in this._privateStore) {
-            delete this._privateStore[key];
+        for (let key in this._target) {
+            this.set(key, undefined);
         }
-
         if (clearStorage) {
             localStorage.removeItem(STORE_SERIALIZE_DATA.toString());
         }
@@ -155,13 +185,14 @@ export class AppStore<T = IStoreEvents<any>> extends EventEmitter<T> {
     private static _sharedAtts = new Set<string>();
 
     /**
-     * 标记需要持久化/共享的数据 
+     * 数据保存到localStorage数据的key集合
      */
     static Serialize(target: any, name: string) {
         AppStore._serializedAtts.add(name);
+        AppStore._sharedAtts.add(name);
     }
     /**
-     * 标记需要多界面不持久化仅共享的数据
+     * 多界面数据共享数据的key集合
      */
     static Share(target: any, name: string) {
         AppStore._sharedAtts.add(name);

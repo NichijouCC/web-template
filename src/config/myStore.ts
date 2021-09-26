@@ -15,6 +15,12 @@ export class CustomStore {
     @AppStore.Serialize
     xxAtt: any;
 
+    @AppStore.Serialize
+    stored_att: any;
+
+    @AppStore.Share
+    shared_att: any;
+
     role: RoleEnum;
 
     confirmBox: {

@@ -4,22 +4,22 @@ import { mapAppStoreToProps } from "../../__internal/index";
 /**
  * 在class组件中使用APP_STORE, 将APP_STORE的数据作为组件state使用
  */
-export class ClassComp extends React.Component<{}, { xxAtt: any }> {
+export class ClassComp extends React.Component<{}, { stored_att: any }> {
     private _debuffAction: DebuffAction;
     constructor(props) {
         super(props);
         this.state = {
-            xxAtt: APP_STORE.xxAtt
+            stored_att: APP_STORE.stored_att
         }
     }
     componentDidMount() {
         this._debuffAction = DebuffAction.create(() => {
             let handler = (ev: { newValue: any, oldValue: any }) => {
-                this.setState({ xxAtt: ev.newValue });
+                this.setState({ stored_att: ev.newValue });
             }
-            APP_STORE.on("xxAtt", handler);
+            APP_STORE.on("stored_att", handler);
             return () => {
-                APP_STORE.off("xxAtt", handler)
+                APP_STORE.off("stored_att", handler)
             }
         });
     }
@@ -27,17 +27,19 @@ export class ClassComp extends React.Component<{}, { xxAtt: any }> {
         this._debuffAction.dispose();
     }
     render() {
-        return (<div>【ClassComp】xxAtt:{this.state.xxAtt}</div>)
+        return (<div>
+            <div>【ClassComp】stored_att:{this.state.stored_att}</div>
+        </div>)
     }
 }
 
 /**
  * 使用提供的帮助函数使用APP_STORE
  */
-@mapAppStoreToProps(["xxAtt"])
-export class ClassComp2 extends React.Component<{ xxAtt?: any }> {
+@mapAppStoreToProps(["stored_att"])
+export class ClassComp2 extends React.Component<{ stored_att?: any }> {
     render() {
-        return <div>【ClassComp2】xxAtt:{this.props.xxAtt}</div>
+        return <div>【ClassComp2】stored_att:{this.props.stored_att}</div>
     }
 }
 
