@@ -24,7 +24,7 @@ MyApp.start(<APP />,{
     //（可选） 启动的时候干些事情
     onInit: () => {};
     //（可选）改写domain
-    appDomain:"xx"
+    appDomain:"xx";
 });
 ```
 
